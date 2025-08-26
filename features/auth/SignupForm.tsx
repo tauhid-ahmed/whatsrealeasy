@@ -2,14 +2,14 @@
 import TextField from "./TextField";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LucideMail, LucideUser2, LucidePhone } from "lucide-react";
+import { LucideMail, LucideUser2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { AuthCard } from "./AuthForm";
 import PasswordField from "./PasswordField";
 import { signupSchema, SignupFormSchema } from "./utils/validation";
 import { loginPath } from "@/paths";
 import AuthButton from "./AuthButton";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 
 const defaultValues = {
   fullName: "",
@@ -25,7 +25,7 @@ export default function SignupForm() {
     defaultValues,
   });
 
-  const onSubmit = async (formData: SignupFormSchema) => {};
+  const onSubmit = async () => {};
 
   return (
     <AuthCard>

@@ -1,8 +1,8 @@
 "use client";
 
-import { ChevronsRight, LucideUser } from "lucide-react";
+import { ChevronsRight } from "lucide-react";
 import { motion } from "framer-motion";
-import React, { createElement } from "react";
+import React from "react";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "./SidebarProvider";
 
@@ -59,48 +59,48 @@ function SidebarHeader() {
   );
 }
 
-function SidebarFooter() {
-  const { isExpanded } = useSidebar();
+// function SidebarFooter() {
+//   const { isExpanded } = useSidebar();
 
-  return (
-    <div className="p-4 flex gap-2 items-start h-[var(--_sidebar-footer-height)]">
-      <span className="bg-accent text-primary rounded">
-        <SidebarIcon icon={LucideUser} size="lg" />
-      </span>
+//   return (
+//     <div className="p-4 flex gap-2 items-start h-[var(--_sidebar-footer-height)]">
+//       <span className="bg-accent text-primary rounded">
+//         <SidebarIcon icon={LucideUser} size="lg" />
+//       </span>
 
-      {isExpanded && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="mt-2"
-        ></motion.div>
-      )}
-    </div>
-  );
-}
+//       {isExpanded && (
+//         <motion.div
+//           initial={{ opacity: 0 }}
+//           animate={{ opacity: 1 }}
+//           className="mt-2"
+//         ></motion.div>
+//       )}
+//     </div>
+//   );
+// }
 
-function SidebarIcon({
-  icon,
-  size = "lg",
-}: {
-  icon: React.ComponentType<{ className: string }>;
-  size?: "sm" | "lg";
-}) {
-  return (
-    <span
-      className={
-        "size-[var(--_sidebar-icon-container)] leading-0 flex items-center justify-center shrink-0"
-      }
-    >
-      {createElement(icon, {
-        className: cn({
-          "size-[var(--_sidebar-icon-sm)]": size === "sm",
-          "size-[var(--_sidebar-icon-lg)]": size === "lg",
-        }),
-      })}
-    </span>
-  );
-}
+// function SidebarIcon({
+//   icon,
+//   size = "lg",
+// }: {
+//   icon: React.ComponentType<{ className: string }>;
+//   size?: "sm" | "lg";
+// }) {
+//   return (
+//     <span
+//       className={
+//         "size-[var(--_sidebar-icon-container)] leading-0 flex items-center justify-center shrink-0"
+//       }
+//     >
+//       {createElement(icon, {
+//         className: cn({
+//           "size-[var(--_sidebar-icon-sm)]": size === "sm",
+//           "size-[var(--_sidebar-icon-lg)]": size === "lg",
+//         }),
+//       })}
+//     </span>
+//   );
+// }
 
 export function SidebarToggleButton() {
   const { isExpanded, toggleSidebarCollapse } = useSidebar();

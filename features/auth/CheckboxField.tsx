@@ -1,16 +1,11 @@
 "use client";
 
 import { useFormContext } from "react-hook-form";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
-import { Checkbox } from "@/components/ui/checkbox";
+import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { useId } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
 type CheckboxFieldProps = {
   name: string;
   label: React.ReactNode;

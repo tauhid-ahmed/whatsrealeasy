@@ -1,14 +1,6 @@
 "use client";
 import React from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 const data = [
   { date: "2000-01", uv: 4000, pv: 2400, amt: 2400 },
@@ -65,9 +57,21 @@ const renderQuarterTick = (tickProps: TickProps) => {
   return <g />;
 };
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+type TooltipEntry = {
+  color: string;
+  dataKey: string;
+  value: number;
+};
+
+type CustomTooltipProps = {
+  active?: boolean;
+  payload?: TooltipEntry[];
+  label?: string;
+};
+
+const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
-    const date = new Date(label);
+    const date = new Date(label ?? "");
     const monthName = date.toLocaleDateString("en-US", {
       month: "long",
       year: "numeric",
@@ -76,7 +80,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     return (
       <div className="bg-white p-4 border border-gray-200 rounded-lg shadow-lg">
         <p className="font-semibold text-gray-800 mb-2">{monthName}</p>
-        {payload.map((entry: any, index: number) => (
+        {payload.map((entry, index: number) => (
           <div key={index} className="flex items-center gap-2 mb-1">
             <div
               className="w-3 h-3 rounded-sm"

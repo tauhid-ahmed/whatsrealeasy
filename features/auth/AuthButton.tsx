@@ -30,7 +30,6 @@ const transitionVariants = {
 };
 
 export default function AuthButton({
-  children,
   className,
   variant,
   size,

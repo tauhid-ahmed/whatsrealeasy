@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Pagination from "@/features/table/Pagination";
 import SearchField from "@/features/table/SearchField";
-import Filter, { FilterField } from "@/features/table/Filter";
+// import { FilterField } from "@/features/table/Filter";
 import {
   LucideArrowUpDown,
   LucideArrowUpNarrowWide,
@@ -275,36 +275,36 @@ const DEFAULT_LIMIT = 5;
 const DEFAULT_SORT = "";
 
 // ---------- FILTER CONFIGURATION ----------
-const filterFields: FilterField[] = [
-  {
-    key: "status",
-    label: "Status",
-    type: "multi-select",
-    options: [
-      { label: "Active", value: "active" },
-      { label: "Inactive", value: "inactive" },
-    ],
-  },
-  {
-    key: "role",
-    label: "Role",
-    type: "multi-select",
-    options: [
-      { label: "User", value: "user" },
-      { label: "Admin", value: "admin" },
-    ],
-  },
-  // {
-  //   key: "earning_range",
-  //   label: "Earning Range",
-  //   type: "select",
-  //   options: [
-  //     { label: "Under $3,000", value: "under_3000" },
-  //     { label: "$3,000 - $5,000", value: "3000_5000" },
-  //     { label: "Above $5,000", value: "above_5000" },
-  //   ],
-  // },
-];
+// const filterFields: FilterField[] = [
+//   {
+//     key: "status",
+//     label: "Status",
+//     type: "multi-select",
+//     options: [
+//       { label: "Active", value: "active" },
+//       { label: "Inactive", value: "inactive" },
+//     ],
+//   },
+//   {
+//     key: "role",
+//     label: "Role",
+//     type: "multi-select",
+//     options: [
+//       { label: "User", value: "user" },
+//       { label: "Admin", value: "admin" },
+//     ],
+//   },
+//   // {
+//   //   key: "earning_range",
+//   //   label: "Earning Range",
+//   //   type: "select",
+//   //   options: [
+//   //     { label: "Under $3,000", value: "under_3000" },
+//   //     { label: "$3,000 - $5,000", value: "3000_5000" },
+//   //     { label: "Above $5,000", value: "above_5000" },
+//   //   ],
+//   // },
+// ];
 
 // ---------- HELPERS ----------
 function sortData<T extends Record<string, unknown>>(

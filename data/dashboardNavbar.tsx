@@ -23,11 +23,6 @@ export const dashboardNavigation = {
       icon: "callManagement",
       href: paths.adminCallManagementPath(),
     },
-    {
-      name: "All Users",
-      icon: "users",
-      href: paths.adminUserManagementPath(),
-    },
   ],
   organization: [],
   agent: [],

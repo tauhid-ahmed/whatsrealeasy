@@ -3,12 +3,7 @@
 
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import {
-  LucideChevronLeft,
-  LucideChevronRight,
-  LucideChevronsLeft,
-  LucideChevronsRight,
-} from "lucide-react";
+import { LucideChevronsLeft, LucideChevronsRight } from "lucide-react";
 
 export interface PaginationProps {
   currentPage: number;
@@ -47,7 +42,7 @@ export default function Pagination({
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
     let start = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
-    let end = Math.min(totalPages, start + maxPagesToShow - 1);
+    const end = Math.min(totalPages, start + maxPagesToShow - 1);
     if (end - start < maxPagesToShow - 1) {
       start = Math.max(1, end - maxPagesToShow + 1);
     }

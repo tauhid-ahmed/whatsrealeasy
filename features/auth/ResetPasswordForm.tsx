@@ -25,7 +25,7 @@ export function ForgotPasswordForm() {
       email: "",
     },
   });
-  const onSubmit = async (formData: ForgotPasswordFormSchema) => {};
+  const onSubmit = async () => {};
 
   return (
     <AuthCard>
@@ -83,7 +83,7 @@ export function NewPasswordForm() {
       token,
     },
   });
-  const onSubmit = async (formData: ResetPasswordFormSchema) => {};
+  const onSubmit = async () => {};
 
   return (
     <AuthCard>

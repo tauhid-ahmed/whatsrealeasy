@@ -10,7 +10,7 @@ import { loginSchema, LoginFormSchema } from "./utils/validation";
 import { forgotPasswordPath, signupPath } from "@/paths";
 import AuthButton from "./AuthButton";
 import Link from "next/link";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 
 export default function LoginForm() {
   const form = useForm<LoginFormSchema>({
@@ -22,7 +22,7 @@ export default function LoginForm() {
     },
   });
 
-  const onSubmit = async (data: LoginFormSchema) => {};
+  const onSubmit = async () => {};
 
   return (
     <AuthCard>

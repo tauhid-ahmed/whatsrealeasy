@@ -35,7 +35,7 @@ export default function Filter({
   filterFields,
   currentFilters,
   searchQuery = "",
-  currentPage = 1,
+  // currentPage = 1,
   limit = 5,
   sortField = "",
   sortDirection = "",
