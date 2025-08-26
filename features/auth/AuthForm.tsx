@@ -5,12 +5,14 @@ import { cn } from "@/lib/utils";
 import type { PropsWithChildren } from "react";
 
 export function AuthCard({ children }: PropsWithChildren) {
-  return <div className="space-y-2 bg-[#05162B] py-4">{children}</div>;
+  return <div className="space-y-2 bg-[#05162B] py-6">{children}</div>;
 }
 
 // Header Section
 function AuthCardHeader({ children }: PropsWithChildren) {
-  return <div className="flex flex-col space-y-2 px-6">{children}</div>;
+  return (
+    <div className="flex flex-col text-center space-y-1 px-6">{children}</div>
+  );
 }
 
 // Main Title

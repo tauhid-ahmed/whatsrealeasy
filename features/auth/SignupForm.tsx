@@ -33,6 +33,9 @@ export default function SignupForm() {
         <h2 className="text-xl font-semibold text-center text-gray-200">
           Sign Up
         </h2>
+        <p className="text-xs text-gray-300">
+          Enter your details to create your account
+        </p>
       </AuthCard.Header>
       <AuthCard.Content>
         <Form {...form}>

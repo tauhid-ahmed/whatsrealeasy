@@ -30,11 +30,12 @@ export function ForgotPasswordForm() {
   return (
     <AuthCard>
       <AuthCard.Header>
-        <AuthCard.Title>Forgot Password?</AuthCard.Title>
-        <AuthCard.Subtitle>
-          No worries! Enter your email and we'll send you a link to reset your
-          password.
-        </AuthCard.Subtitle>
+        <h2 className="text-xl font-semibold text-center text-gray-200">
+          Forgot Password?
+        </h2>
+        <p className="text-xs text-gray-300">
+          Enter your email for the verification process.
+        </p>
       </AuthCard.Header>
 
       <AuthCard.Content>
@@ -87,11 +88,12 @@ export function NewPasswordForm() {
   return (
     <AuthCard>
       <AuthCard.Header>
-        <AuthCard.Title>Reset Password</AuthCard.Title>
-        <AuthCard.Subtitle>
-          Choose a new password to secure your account. Make sure it’s strong
-          and memorable.
-        </AuthCard.Subtitle>
+        <h2 className="text-xl font-semibold text-center text-gray-200">
+          New Password?
+        </h2>
+        <p className="text-xs text-gray-300">
+          Set the new password for your account.
+        </p>
       </AuthCard.Header>
 
       <AuthCard.Content>

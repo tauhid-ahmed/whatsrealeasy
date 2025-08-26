@@ -30,6 +30,9 @@ export default function LoginForm() {
         <h2 className="text-xl font-semibold text-center text-gray-200">
           Welcome back!
         </h2>
+        <p className="text-xs text-gray-300">
+          Enter your details to login to your account
+        </p>
       </AuthCard.Header>
       <AuthCard.Content>
         <Form {...form}>
