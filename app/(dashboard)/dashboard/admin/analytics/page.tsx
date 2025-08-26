@@ -5,28 +5,32 @@ import { cn } from "@/lib/utils";
 export default function AdminAnalyticsPage() {
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {dashboardStats.map((stat, idx) => {
           const IconComponent = getIcon(stat.icon);
           return (
             <div
               key={idx}
               className={cn(
-                `px-8 py-8 flex items-center gap-2 rounded-lg ${stat.cardBg}`
+                `px-8 py-14 flex items-center gap-2 rounded-lg ${stat.cardBg}`
               )}
             >
               <div
                 className={cn(
-                  `size-12 rounded-full ${stat.bgColor} flex items-center justify-center`
+                  `size-16 rounded-full ${stat.iconBg} flex items-center justify-center`
                 )}
               >
-                <IconComponent className="size-8 text-white" />
+                <IconComponent className={cn("size-6", stat.iconColor)} />
               </div>
               <div className="">
-                <h3 className={cn(`text-2xl font-bold ${stat.color}`)}>
+                <h3 className={cn(`text-3xl font-bold ${stat.textColor1}`)}>
                   {stat.value}
                 </h3>
-                <p className={cn(`text-sm ${stat.color} opacity-70`)}>
+                <p
+                  className={cn(
+                    `text-xl ${stat.textColor2} opacity-70 font-medium`
+                  )}
+                >
                   {stat.title}
                 </p>
               </div>

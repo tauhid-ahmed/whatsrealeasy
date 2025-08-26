@@ -32,215 +32,93 @@ export const getIcon = (iconName: string) => {
 
 export const dashboardStats = [
   {
-    id: 1,
     title: "Total Call",
     value: "220",
     icon: "phone",
-    color: "blue",
-    bgColor: "bg-blue-500",
-    cardBg: "bg-gray-950",
+    iconColor: "text-[#8BD6FF]",
+    iconBg: "bg-[#427DC9]",
+    cardBg: "bg-white",
+    textColor1: "text-black/75",
+    textColor2: "text-black/75",
   },
   {
-    id: 2,
     title: "Total Success Call",
     value: "170",
     icon: "phoneCall",
-    color: "green",
-    bgColor: "bg-green-500",
-    cardBg: "bg-gray-800",
+    iconColor: "text-[#89FF8E]",
+    iconBg: "bg-[#34A853]",
+    cardBg: "bg-[#303030]",
+    textColo1: "text-white",
+    textColor2: "text-white/80",
   },
   {
-    id: 3,
     title: "Booking Success Ratio",
     value: "80%",
     icon: "calendarCheck",
-    color: "green",
-    bgColor: "bg-green-500",
-    cardBg: "bg-gray-700",
+    iconColor: "text-[#56FF6F]",
+    iconBg: "bg-[#34A853]",
+    cardBg: "bg-[#696D67]",
+    textColor1: "text-white",
+    textColor2: "text-white/80",
   },
   {
-    id: 4,
     title: "Total Drop Call",
     value: "30",
     icon: "phoneOff",
-    color: "red",
-    bgColor: "bg-red-500",
-    cardBg: "bg-gray-700",
+    iconColor: "text-white",
+    iconBg: "bg-[#EE403766]",
+    cardBg: "bg-[#536377]",
+    textColor1: "text-white/90",
+    textColor2: "text-white/80",
   },
   {
-    id: 5,
     title: "Total Waiting Call",
     value: "20",
     icon: "clock",
-    color: "orange",
-    bgColor: "bg-orange-500",
-    cardBg: "bg-gray-800",
+    iconColor: "text-[#F39C12]",
+    iconBg: "bg-[#F39C124D]",
+    cardBg: "bg-[#72685C]",
+    textColor1: "text-white",
+    textColor2: "text-white/70",
   },
   {
-    id: 6,
     title: "Total Appointments",
     value: "220",
     icon: "calendar",
-    color: "blue",
-    bgColor: "bg-blue-500",
-    cardBg: "bg-blue-600",
+    iconColor: "text-[#C8E0FF]",
+    iconBg: "bg-[#82B8FF4D]",
+    cardBg: "bg-[#397C8B]",
+    textColor1: "text-white/90",
+    textColor2: "text-white/70",
   },
   {
-    id: 7,
     title: "Total Success Meeting",
     value: "160",
     icon: "calendarCheck",
-    color: "green",
-    bgColor: "bg-green-500",
-    cardBg: "bg-gray-700",
+    iconColor: "text-[#56FF6F]",
+    iconBg: "bg-[#34A853]",
+    cardBg: "bg-[#696D67]",
+    textColor1: "text-white/90",
+    textColor2: "text-white/70",
   },
   {
-    id: 8,
     title: "Upcoming Appointments",
     value: "60",
     icon: "calendarPlus",
-    color: "teal",
-    bgColor: "bg-teal-500",
-    cardBg: "bg-teal-600",
+    iconColor: "text-[#2B9E93]",
+    iconBg: "bg-[#083F394D]",
+    cardBg: "bg-[#3C716C]",
+    textColor1: "text-white",
+    textColor2: "text-white/70",
   },
   {
-    id: 9,
     title: "Avg Appointment Time",
     value: "03:00 - 05:00",
     icon: "clock",
-    color: "gray",
-    bgColor: "bg-gray-500",
-    cardBg: "bg-gray-600",
+    iconColor: "text-[#1C1B1F]",
+    iconBg: "bg-[#4E7B84]",
+    cardBg: "bg-[#8DB0B7]",
+    textColor1: "text-white/90",
+    textColor2: "text-white/70",
   },
 ];
-
-export const statsGrid = {
-  topRow: [
-    {
-      title: "Total Call",
-      value: "220",
-      icon: "phone",
-      iconColor: "text-white",
-      iconBg: "bg-blue-500",
-      cardBg: "bg-gray-950",
-      textColor: "text-gray-800",
-    },
-    {
-      title: "Total Success Call",
-      value: "170",
-      icon: "phoneCall",
-      iconColor: "text-white",
-      iconBg: "bg-green-500",
-      cardBg: "bg-gray-800",
-      textColor: "text-white",
-    },
-    {
-      title: "Booking Success Ratio",
-      value: "80%",
-      icon: "calendarCheck",
-      iconColor: "text-white",
-      iconBg: "bg-green-500",
-      cardBg: "bg-gray-700",
-      textColor: "text-white",
-    },
-  ],
-  middleRow: [
-    {
-      title: "Total Drop Call",
-      value: "30",
-      icon: "phoneOff",
-      iconColor: "text-white",
-      iconBg: "bg-red-500",
-      cardBg: "bg-gray-700",
-      textColor: "text-white",
-    },
-    {
-      title: "Total Waiting Call",
-      value: "20",
-      icon: "clock",
-      iconColor: "text-white",
-      iconBg: "bg-orange-500",
-      cardBg: "bg-gray-800",
-      textColor: "text-white",
-    },
-    {
-      title: "Total Appointments",
-      value: "220",
-      icon: "calendar",
-      iconColor: "text-white",
-      iconBg: "bg-blue-500",
-      cardBg: "bg-blue-600",
-      textColor: "text-white",
-    },
-  ],
-  bottomRow: [
-    {
-      title: "Total Success Meeting",
-      value: "160",
-      icon: "calendarCheck",
-      iconColor: "text-white",
-      iconBg: "bg-green-500",
-      cardBg: "bg-gray-700",
-      textColor: "text-white",
-    },
-    {
-      title: "Upcoming Appointments",
-      value: "60",
-      icon: "calendarPlus",
-      iconColor: "text-white",
-      iconBg: "bg-teal-500",
-      cardBg: "bg-teal-600",
-      textColor: "text-white",
-    },
-    {
-      title: "Avg Appointment Time",
-      value: "03:00 - 05:00",
-      icon: "clock",
-      iconColor: "text-white",
-      iconBg: "bg-gray-500",
-      cardBg: "bg-gray-600",
-      textColor: "text-white",
-    },
-  ],
-};
-
-// Example usage in a component:
-/*
-import { dashboardStats, getIcon } from './dashboard-data';
-
-function StatsCard({ stat }) {
-  const IconComponent = getIcon(stat.icon);
-  
-  return (
-    <div className={`p-4 rounded-lg ${stat.cardBg}`}>
-      <div className={`w-10 h-10 rounded-full ${stat.bgColor} flex items-center justify-center mb-3`}>
-        <IconComponent className="w-5 h-5 text-white" />
-      </div>
-      <h3 className={`text-2xl font-bold ${stat.textColor}`}>{stat.value}</h3>
-      <p className={`text-sm ${stat.textColor} opacity-70`}>{stat.title}</p>
-    </div>
-  );
-}
-
-function Dashboard() {
-  return (
-    <div className="grid grid-cols-3 gap-4">
-      {dashboardStats.map((stat) => (
-        <StatsCard key={stat.id} stat={stat} />
-      ))}
-    </div>
-  );
-}
-
-// Alternative usage with direct mapping:
-function StatsCardAlt({ stat }) {
-  const IconComponent = iconMap[stat.icon];
-  
-  return (
-    <div className={`p-4 rounded-lg ${stat.cardBg}`}>
-      <IconComponent className="w-6 h-6" />
-      <span>{stat.value}</span>
-    </div>
-  );
-}
-*/
