@@ -166,12 +166,15 @@ export default function FileUpload() {
             inputRef={inputRef}
             disabled={uploading}
             onFileSelect={handleFileSelect}
+            files={files}
           />
-          <ActionButtons
-            disabled={files.length === 0 || uploading}
-            onUpload={handleUpload}
-            onClear={handleClear}
-          />
+          {files.length > 0 && !uploading && (
+            <ActionButtons
+              disabled={files.length === 0 || uploading}
+              onUpload={handleUpload}
+              onClear={handleClear}
+            />
+          )}
         </div>
       </div>
 
@@ -184,9 +187,15 @@ type FileInputProps = {
   inputRef: React.RefObject<HTMLInputElement | null>;
   disabled: boolean;
   onFileSelect: (e: ChangeEvent<HTMLInputElement>) => void;
+  files: FileWithProgress[];
 };
 
-function FileInput({ inputRef, disabled, onFileSelect }: FileInputProps) {
+function FileInput({
+  inputRef,
+  disabled,
+  onFileSelect,
+  files,
+}: FileInputProps) {
   return (
     <>
       <input
@@ -199,10 +208,16 @@ function FileInput({ inputRef, disabled, onFileSelect }: FileInputProps) {
         disabled={disabled}
       />
       <label htmlFor="file-upload">
-        <Button type="button" onClick={() => inputRef.current?.click()}>
-          <Plus size={18} />
-          Select Files
-        </Button>
+        {files.length <= 0 && (
+          <Button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            size="sm"
+          >
+            <Plus size={18} />
+            Select Files
+          </Button>
+        )}
       </label>
     </>
   );
@@ -221,14 +236,17 @@ function ActionButtons({ onUpload, onClear, disabled }: ActionButtonsProps) {
         onClick={onUpload}
         disabled={disabled}
         className="flex items-center gap-2"
+        size="sm"
       >
         <Upload size={18} />
         Upload
       </Button>
+      {/* hidden for now */}
       <Button
         onClick={onClear}
-        className="flex items-center gap-2"
+        className="flexx items-center gap-2 hidden"
         disabled={disabled}
+        size="sm"
       >
         <Trash2 size={18} />
         Clear All
