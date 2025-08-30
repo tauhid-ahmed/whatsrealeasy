@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 interface SearchFieldProps {
   defaultQuery?: string;
   debounceTime?: number;
+  basePath?: string;
 }
 
 export default function SearchField({

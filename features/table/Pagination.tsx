@@ -24,7 +24,7 @@ export default function Pagination({
   sortField,
   sortDirection,
   limit,
-  basePath = "/dashboard/admin/call-management",
+  basePath = "",
 }: PaginationProps) {
   const buildUrl = (page: number) => {
     const params = new URLSearchParams();

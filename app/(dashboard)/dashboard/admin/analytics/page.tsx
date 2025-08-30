@@ -1,8 +1,24 @@
 import { getIcon, dashboardStats } from "@/data/analyticsData";
 import AnalyticsChart from "@/features/analytics/Charts";
 import { cn } from "@/lib/utils";
+import DashboardTable from "./_table";
 
-export default function AdminAnalyticsPage() {
+interface TableSearchParams {
+  page?: number;
+  limit?: number;
+  sort?: string;
+  query?: string;
+  status?: string | string[];
+  role?: string | string[];
+  earning_range?: string;
+  [key: string]: string | string[] | undefined | number;
+}
+
+interface TableProps {
+  searchParams: Promise<TableSearchParams>;
+}
+
+export default async function AdminAnalyticsPage({ searchParams }: TableProps) {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -40,6 +56,9 @@ export default function AdminAnalyticsPage() {
       </div>
       <div className="mt-14">
         <AnalyticsChart />
+      </div>
+      <div className="mt-14">
+        <DashboardTable searchParams={searchParams} />
       </div>
     </>
   );
