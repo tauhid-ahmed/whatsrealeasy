@@ -10,7 +10,9 @@ import { loginSchema, LoginFormSchema } from "./utils/validation";
 import { forgotPasswordPath, signupPath } from "@/paths";
 import AuthButton from "./AuthButton";
 import Link from "next/link";
-// import { toast } from "sonner";
+import { toast } from "sonner";
+import { LoginResponse } from "@/types/auth.type";
+import { safeAsync } from "@/lib/safeAsync";
 
 export default function LoginForm() {
   const form = useForm<LoginFormSchema>({
@@ -22,7 +24,17 @@ export default function LoginForm() {
     },
   });
 
-  const onSubmit = async () => {};
+  const onSubmit = async (data: LoginFormSchema) => {
+    await safeAsync(async () => {
+      const response = await fetch(`/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const loginResponse: LoginResponse = await response.json();
+      toast.success(loginResponse.message);
+    });
+  };
 
   return (
     <AuthCard>
