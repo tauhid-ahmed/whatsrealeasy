@@ -454,7 +454,7 @@ export default async function CallManagementPage({ searchParams }: TableProps) {
   const sortedPaginatedData = sortData(paginatedData, sortField, sortDirection);
 
   return (
-    <div className="p-4">
+    <>
       <div className="flex justify-between mb-4">
         <SearchField defaultQuery={searchQuery} />
       </div>
@@ -567,7 +567,7 @@ export default async function CallManagementPage({ searchParams }: TableProps) {
           sortDirection={sortDirection}
         />
       </div>
-    </div>
+    </>
   );
 }
 

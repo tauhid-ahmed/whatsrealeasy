@@ -127,7 +127,7 @@ export default async function DashboardTable({ searchParams }: TableProps) {
   const sortedPaginatedData = sortData(paginatedData, sortField, sortDirection);
 
   return (
-    <div className="p-4">
+    <>
       <table className="table-auto border-collapse border border-gray-500 w-full text-gray-300">
         <thead>
           <tr className="border-b border-gray-500">
@@ -181,7 +181,7 @@ export default async function DashboardTable({ searchParams }: TableProps) {
           basePath="/dashboard/admin/analytics"
         />
       </div>
-    </div>
+    </>
   );
 }
 

@@ -31,19 +31,17 @@ export default function DashboardLayout({
           gridTemplateAreas: `'sidebar main'`,
         } as React.CSSProperties
       }
-      className={cn(`grid transition-[grid] duration-300 bg-dark3`)}
+      className={cn(`grid transition-[grid] duration-300 bg-dark3 p-4 gap-4`)}
     >
       <div className="[grid-area:sidebar]">{sidebar}</div>
       <div className="[grid-area:main]">
-        <div className="sticky top-0 z-50 px-4">
-          <div className="bg-dark2 border-b border-l border-l-dark3 border-b-dark3 shadow-xs">
+        <div className="sticky top-4 z-50 before:absolute before:inset-0 before:-translate-y-4 before:bg-dark3 before:-z-10">
+          <div className="bg-dark2 border-b border-l border-l-dark3 border-b-dark3 shadow backdrop-blur">
             {header}
           </div>
         </div>
-        <div className="px-4">
-          <div className="bg-dark3 min-h-screen border-l border-l-dark3 shadow-xs">
-            {children}
-          </div>
+        <div className="bg-dark3 min-h-[calc(100vh-6.6rem)] border-l border-l-dark3 shadow-xs">
+          {children}
         </div>
       </div>
     </div>
