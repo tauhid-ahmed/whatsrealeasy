@@ -1,11 +1,15 @@
-import { Heading } from "@/components";
+import Heading from "@/components/Heading";
 import { Card, CardContent } from "@/components/ui/card";
 import Link, { type LinkProps } from "next/link";
 import { cn } from "@/lib/utils";
 import type { PropsWithChildren } from "react";
 
 export function AuthCard({ children }: PropsWithChildren) {
-  return <div className="space-y-2 bg-[#05162B] py-6">{children}</div>;
+  return (
+    <div className="space-y-2 bg-[#05162B] py-6 max-w-sm w-full! mx-auto rounded-lg overflow-hidden border border-double border-gray-600 shadow-2xl backdrop-blur-2xl">
+      {children}
+    </div>
+  );
 }
 
 // Header Section

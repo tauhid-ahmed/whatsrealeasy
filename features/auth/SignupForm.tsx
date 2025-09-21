@@ -9,7 +9,9 @@ import PasswordField from "./PasswordField";
 import { signupSchema, SignupFormSchema } from "./utils/validation";
 import { loginPath } from "@/paths";
 import AuthButton from "./AuthButton";
-// import { toast } from "sonner";
+import { toast } from "sonner";
+import { safeAsync } from "@/lib/safeAsync";
+import { LoginResponse } from "@/types/auth.type";
 
 const defaultValues = {
   fullName: "",
@@ -25,7 +27,18 @@ export default function SignupForm() {
     defaultValues,
   });
 
-  const onSubmit = async () => {};
+  const onSubmit = async () => {
+    await safeAsync(async () => {
+      const response = await fetch(`/api/auth/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form.getValues()),
+      });
+      console.log(response);
+      const loginResponse: LoginResponse = await response.json();
+      toast.success(loginResponse.message);
+    });
+  };
 
   return (
     <AuthCard>

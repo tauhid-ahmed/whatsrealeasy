@@ -1,11 +1,8 @@
 import { env } from "@/env";
+import { logError } from "@/utils/logger";
 import { NextResponse } from "next/server";
-import { organizationSignupSchema } from "@/features/auth/utils/validation";
 import { ZodError } from "zod";
 
-/**
- * 🔹 Request shape from frontend form
- */
 type OrganizationSignupRequest = {
   name: string;
   email: string;
@@ -17,9 +14,6 @@ type OrganizationSignupRequest = {
   industry?: string;
 };
 
-/**
- * 🔹 Utility: Format Zod validation errors
- */
 function formatZodError(error: ZodError) {
   return error.issues.map((issue) => ({
     field: issue.path.join("."),
@@ -31,31 +25,13 @@ export async function POST(request: Request) {
   try {
     const formData: OrganizationSignupRequest = await request.json();
 
-    // ✅ Validate payload with Zod
-    const payload = organizationSignupSchema.parse({
-      userData: {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        phone: formData.phoneNumber,
-      },
-      organizationData: {
-        name: formData.businessName,
-        websiteLink: formData.website,
-        address: formData.address,
-        industry: formData.industry,
-      },
-    });
-
-    // ✅ Forward request to backend
-    const response = await fetch(`${env.API_BASE_URL}/users/register-user`, {
+    const response = await fetch(`${env.API_BASE_URL}/users/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(formData),
     });
 
-    // ✅ Pass through backend response as-is
-    const responseBody = await response.json().catch(() => null);
+    const responseBody = await response.json();
 
     return NextResponse.json(responseBody, { status: response.status });
   } catch (error) {
@@ -71,7 +47,7 @@ export async function POST(request: Request) {
       );
     }
 
-    console.error("Signup Error:", error);
+    logError(error);
 
     return NextResponse.json(
       {
