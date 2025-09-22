@@ -36,7 +36,7 @@ export default function TextField({
       name={name}
       render={({ field }) => (
         <FormItem className={cn("space-y-0.5", className)}>
-          <FormLabel className="flex justify-between items-center text-gray-200 text-sm">
+          <FormLabel className="flex justify-between items-center text-gray-100 text-sm">
             {required ? (
               <div className="flex items-center gap-2 justify-between">
                 <span className="inline-flex items-center gap-1">
@@ -61,7 +61,7 @@ export default function TextField({
                   placeholder={placeholder}
                   type={type}
                   className={cn(
-                    "rounded placeholder:text-xs placeholder:text-gray-300 text-gray-300 border-gray-400",
+                    "rounded placeholder:text-xs placeholder:text-gray-200 text-gray-100 border-gray-300",
                     children && "pr-9"
                   )}
                 />
@@ -69,7 +69,7 @@ export default function TextField({
               </div>
             ) : (
               <Input
-                className="rounded-2xl placeholder:text-xs placeholder:text-gray-300 text-gray-300 border-gray-400"
+                className="rounded-2xl placeholder:text-xs placeholder:text-gray-200 text-gray-200 border-gray-300"
                 {...field}
                 placeholder={placeholder}
                 type={type}

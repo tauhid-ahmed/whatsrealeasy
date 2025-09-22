@@ -14,10 +14,13 @@ export interface User {
 export async function getServerAuth(): Promise<null> {
   const cookieStore = cookies();
   const accessToken = (await cookieStore).get("accessToken")?.value;
+  logInfo(accessToken);
 
   if (!accessToken) {
     return null;
   }
+
+  return;
 
   try {
     const response = await fetch(`${env.API_BASE_URL}/auth/me`, {
@@ -81,7 +84,7 @@ export async function getMe(): Promise<Me | null> {
     }
     return data.data;
   } catch (error) {
-    env.NODE_ENV === "development" && console.error("Auth check error:", error);
+    logError(error);
     return null;
   }
 }

@@ -1,5 +1,5 @@
 import { env } from "@/env";
-import { logError } from "@/utils/logger";
+import { SignUpAPIResponse } from "@/types/auth.type";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 
@@ -31,11 +31,22 @@ export async function POST(request: Request) {
       body: JSON.stringify(formData),
     });
 
+    if (!response.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          statusCode: response.status,
+          message: "Signup failed. Please try again.",
+        },
+        { status: response.status }
+      );
+    }
     const responseBody = await response.json();
 
     return NextResponse.json(responseBody, { status: response.status });
   } catch (error) {
     if (error instanceof ZodError) {
+      logInfo("40", error);
       return NextResponse.json(
         {
           success: false,
@@ -47,13 +58,11 @@ export async function POST(request: Request) {
       );
     }
 
-    logError(error);
-
     return NextResponse.json(
       {
         success: false,
         statusCode: 500,
-        message: "An unexpected error occurred. Please try again later.",
+        message: error instanceof Error ? error.message : String(error),
       },
       { status: 500 }
     );

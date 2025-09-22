@@ -6,7 +6,7 @@ import type { PropsWithChildren } from "react";
 
 export function AuthCard({ children }: PropsWithChildren) {
   return (
-    <div className="space-y-2 bg-[#05162B] py-6 max-w-sm w-full! mx-auto rounded-lg overflow-hidden border border-double border-gray-600 shadow-2xl backdrop-blur-2xl">
+    <div className="space-y-2 bg-[#05162B] py-6 max-w-sm w-full! mx-auto rounded-lg overflow-hidden border border-double border-slate-400 shadow-2xl backdrop-blur-2xl">
       {children}
     </div>
   );
@@ -31,12 +31,7 @@ function AuthCardTitle({ children }: PropsWithChildren) {
 // Subtitle (small heading under title)
 function AuthCardSubtitle({ children }: PropsWithChildren) {
   return (
-    <Heading
-      as="h3"
-      size="h3"
-      weight="medium"
-      className="text-muted-foreground"
-    >
+    <Heading as="h3" size="h3" weight="medium">
       {children}
     </Heading>
   );
@@ -83,7 +78,7 @@ function AuthCardLink({
 
 // Small text used inside footer or form
 function AuthCardText({ children }: PropsWithChildren) {
-  return <span className="text-gray-200 font-medium text-xs">{children}</span>;
+  return <span className="text-gray-100 font-medium text-xs">{children}</span>;
 }
 
 // Attach subcomponents

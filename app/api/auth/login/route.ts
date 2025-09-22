@@ -1,6 +1,6 @@
 import { env } from "@/env";
 import { LoginAPIResponse } from "@/types/auth.type";
-import { logError } from "@/utils/logger";
+
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {

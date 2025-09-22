@@ -6,7 +6,7 @@ import { LucideMail, LucideUser2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { AuthCard } from "./AuthForm";
 import PasswordField from "./PasswordField";
-import { signupSchema, SignupFormSchema } from "./utils/validation";
+import { signupSchema, SignupFormSchema } from "../utils/validation";
 import { loginPath } from "@/paths";
 import AuthButton from "./AuthButton";
 import { toast } from "sonner";
@@ -14,7 +14,7 @@ import { safeAsync } from "@/lib/safeAsync";
 import { LoginResponse } from "@/types/auth.type";
 
 const defaultValues = {
-  fullName: "",
+  name: "",
   email: "",
   password: "",
   confirmPassword: "",
@@ -32,10 +32,14 @@ export default function SignupForm() {
       const response = await fetch(`/api/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form.getValues()),
+        body: JSON.stringify({
+          name: form.getValues("name"),
+          email: form.getValues("email"),
+          password: form.getValues("password"),
+        }),
       });
-      console.log(response);
       const loginResponse: LoginResponse = await response.json();
+      logInfo(loginResponse);
       toast.success(loginResponse.message);
     });
   };
@@ -57,11 +61,7 @@ export default function SignupForm() {
             className="overflow-hidden"
           >
             <fieldset className="space-y-6">
-              <TextField
-                label="Full Name"
-                name="fullName"
-                placeholder="Enter your name"
-              >
+              <TextField label="Name" name="name" placeholder="Enter your name">
                 <LucideUser2 className="size-9 p-2.5 absolute right-0 bottom-0 text-gray-400" />
               </TextField>
               <TextField

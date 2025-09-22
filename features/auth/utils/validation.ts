@@ -8,10 +8,10 @@ import {
 // -------------------- Signup Schema --------------------
 export const signupSchema = z
   .object({
-    fullName: z
+    name: z
       .string({ message: "Name is required" })
-      .min(5, { message: "Fullname must be at least 5 characters long" })
-      .max(25, { message: "Fullname must be at most 25 characters long" })
+      .min(5, { message: "Name must be at least 5 characters long" })
+      .max(25, { message: "Name must be at most 25 characters long" })
       .trim(),
     email: z.email("Invalid email address"),
     password: z

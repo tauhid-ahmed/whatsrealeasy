@@ -1,13 +1,16 @@
+type TokenResponse = {
+  accessToken: string;
+  refreshToken: string;
+};
+
 export type LoginAPIResponse = {
   success: boolean;
   message: string;
-  data: {
-    accessToken?: string;
-    refreshToken?: string;
-  };
+  statusCode?: number;
+  data: TokenResponse;
 };
 
-export type AuthUser = {
+export type LoggedInUser = {
   userId: string;
   name: string;
   email: string;
@@ -18,5 +21,12 @@ export type AuthUser = {
 export type LoginResponse = {
   success: boolean;
   message: string;
-  data: AuthUser;
+  data: LoggedInUser;
+};
+
+export type SignUpAPIResponse = {
+  success: boolean;
+  statusCode?: number;
+  message: string;
+  data: TokenResponse;
 };

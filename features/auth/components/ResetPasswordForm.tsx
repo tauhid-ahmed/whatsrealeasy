@@ -11,7 +11,7 @@ import {
   ResetPasswordFormSchema,
   forgotPassword,
   ForgotPasswordFormSchema,
-} from "./utils/validation";
+} from "../utils/validation";
 
 import AuthButton from "./AuthButton";
 import { forgotPasswordPath, loginPath } from "@/paths";

@@ -6,7 +6,7 @@ import { LucideMail } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { AuthCard } from "./AuthForm";
 import PasswordField from "./PasswordField";
-import { loginSchema, LoginFormSchema } from "./utils/validation";
+import { loginSchema, LoginFormSchema } from "../utils/validation";
 import { forgotPasswordPath, signupPath } from "@/paths";
 import AuthButton from "./AuthButton";
 import Link from "next/link";
