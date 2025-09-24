@@ -34,6 +34,7 @@ export default function LoginForm() {
       });
       const loginResponse: LoginResponse = await response.json();
       toast.success(loginResponse.message);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       window.location.href =
         roleBasedPaths[loginResponse.data.role as keyof typeof roleBasedPaths];
     });

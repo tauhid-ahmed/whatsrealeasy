@@ -6,6 +6,6 @@ export default async function AdminDashboardLayout({
   children,
 }: React.PropsWithChildren) {
   const me = await getMe();
-  if (!me || !me?.isActive) return redirect(loginPath());
+  if (!me || !me?.role.includes("super_admin")) return redirect(loginPath());
   return children;
 }

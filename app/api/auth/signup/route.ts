@@ -33,21 +33,24 @@ export async function POST(request: Request) {
     });
 
     if (!response.ok) {
+      const errorBody = await response.json().catch(() => null);
+      // Optionally log or use errorBody for more specific error messages
       return NextResponse.json(
         {
           success: false,
           statusCode: response.status,
-          message: "Signup failed. Please try again.",
+          message: errorBody?.message || "Signup failed. Please try again.",
         },
         { status: response.status }
       );
     }
-    const responseBody = await response.json();
+
+    const responseBody: SignUpAPIResponse = await response.json();
 
     return NextResponse.json(responseBody, { status: response.status });
   } catch (error) {
     if (error instanceof ZodError) {
-      logInfo("40", error);
+      logInfo("Validation error:", error);
       return NextResponse.json(
         {
           success: false,
@@ -58,6 +61,8 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+
+    logInfo("Unexpected error:", error);
 
     return NextResponse.json(
       {

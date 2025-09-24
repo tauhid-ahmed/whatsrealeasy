@@ -11,8 +11,9 @@ import { loginPath } from "@/paths";
 import AuthButton from "./AuthButton";
 import { toast } from "sonner";
 import { safeAsync } from "@/lib/safeAsync";
-import { LoginResponse } from "@/types/auth.type";
+import { SignUpAPIResponse } from "@/types/auth.type";
 import { logInfo } from "@/lib/logger";
+import { useRouter } from "next/navigation";
 
 const defaultValues = {
   name: "",
@@ -22,6 +23,7 @@ const defaultValues = {
 };
 
 export default function SignupForm() {
+  const router = useRouter();
   const form = useForm<SignupFormSchema>({
     mode: "all",
     resolver: zodResolver(signupSchema),
@@ -39,9 +41,11 @@ export default function SignupForm() {
           password: form.getValues("password"),
         }),
       });
-      const loginResponse: LoginResponse = await response.json();
-      logInfo(loginResponse);
-      toast.success(loginResponse.message);
+      const signupResponse: SignUpAPIResponse = await response.json();
+      logInfo(signupResponse);
+      toast.success(signupResponse.message);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      router.push(loginPath());
     });
   };
 
