@@ -1,4 +1,5 @@
 import { env } from "@/env";
+import { logInfo } from "@/lib/logger";
 import { SignUpAPIResponse } from "@/types/auth.type";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";

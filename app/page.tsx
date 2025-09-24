@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/context/AuthContext";
+import { logInfo } from "@/lib/logger";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -12,7 +14,7 @@ export default function Navbar() {
     { name: "Signup", href: "/auth/signup" },
     { name: "Forgot Password", href: "/auth/forgot-password" },
     { name: "New Password", href: "/auth/new-password" },
-    { name: "Dashboard", href: "/dashboard/admin/analytics" },
+    { name: "Dashboard", href: "/dashboard/super-admin/outbound/analytics" },
   ];
 
   return (

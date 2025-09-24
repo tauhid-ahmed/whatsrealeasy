@@ -30,3 +30,22 @@ export type SignUpAPIResponse = {
   message: string;
   data: TokenResponse;
 };
+
+export type Me = {
+  id: string;
+  name: string;
+  email: string;
+  profilePic: string | null;
+  role: "super_admin" | "admin" | "user";
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  passwordChangedAt: string | null;
+  accessToken: string;
+};
+
+export type MeResponse = {
+  success: boolean;
+  message: string;
+  data: Me;
+};

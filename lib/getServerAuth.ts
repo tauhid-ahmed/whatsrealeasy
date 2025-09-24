@@ -3,88 +3,42 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { loginPath } from "@/paths";
 import { env } from "@/env";
+import { Me, MeResponse } from "@/types/auth.type";
 
-export interface User {
-  id: string;
-  email: string;
-  role: string;
-  name: string;
-}
-
-export async function getServerAuth(): Promise<null> {
+export async function getMe(): Promise<Me | null> {
   const cookieStore = cookies();
   const accessToken = (await cookieStore).get("accessToken")?.value;
-  logInfo(accessToken);
-
-  if (!accessToken) {
-    return null;
-  }
-
-  return;
 
   try {
     const response = await fetch(`${env.API_BASE_URL}/auth/me`, {
       headers: {
-        Authorization: accessToken,
+        Authorization: accessToken || "",
       },
     });
 
-    if (response.ok) {
-      const responseData = await response.json();
+    console.log(response);
 
-      return { ...responseData, accessToken };
-    }
+    if (!response.ok) return null;
+    const responseData: MeResponse = await response.json();
+
+    return {
+      ...responseData.data,
+      accessToken: accessToken || "",
+    };
   } catch {
     return null;
   }
-
-  return null;
 }
 
-export async function requireAuth(): Promise<null> {
-  const data = await getServerAuth();
+export async function requireAuth(): Promise<Me | null> {
+  const data = await getMe();
   if (!data) {
     redirect(loginPath());
   }
   return data;
 }
 
-export interface AuthResponse {
-  success: boolean;
-  data: string;
-  message?: string;
-}
-
-export async function getMe(): Promise<Me | null> {
-  try {
-    const cookieStore = await cookies();
-    const accessToken = cookieStore.get("accessToken")?.value;
-
-    if (!accessToken) {
-      return null;
-    }
-
-    const res = await fetch(`${env.API_BASE_URL}/auth/me`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: accessToken,
-      },
-      cache: "no-store",
-    });
-
-    if (!res.ok) {
-      return null;
-    }
-
-    const data: AuthResponse = await res.json();
-
-    if (!data?.success) {
-      return null;
-    }
-    return data.data;
-  } catch (error) {
-    logError(error);
-    return null;
-  }
+export async function getAccessToken(): Promise<string | null> {
+  const cookieStore = await cookies();
+  return cookieStore.get("accessToken")?.value ?? null;
 }

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { ErrorView } from "@/components/Error";
+import { logError } from "@/lib/logger";
 
 export default function Error({
   error,

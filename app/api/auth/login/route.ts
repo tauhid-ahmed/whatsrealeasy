@@ -1,4 +1,5 @@
 import { env } from "@/env";
+import { logError } from "@/lib/logger";
 import { LoginAPIResponse } from "@/types/auth.type";
 
 import { NextResponse } from "next/server";

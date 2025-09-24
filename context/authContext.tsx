@@ -1,26 +1,42 @@
 "use client";
 
-import { AuthUser } from "@/types/auth.type";
-import { createContext, useContext } from "react";
+import { logInfo } from "@/lib/logger";
+import { Me } from "@/types/auth.type";
+import { createContext, useContext, useState, useEffect } from "react";
 
-type AuthContextValue = AuthUser | null;
+type AuthContextValue = Me | null;
 
-const AuthContext = createContext<AuthContextValue>(null);
-
-export function AuthProvider({
-  children,
-  user,
-}: {
+type AuthContextProviderProps = {
   children: React.ReactNode;
-  user: AuthUser | null;
-}) {
-  return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
+  me: Me | null;
+};
+
+const EMPTY_CONTEXT = Symbol("empty");
+
+const AuthContext = createContext<AuthContextValue | typeof EMPTY_CONTEXT>(
+  EMPTY_CONTEXT
+);
+
+export function AuthProvider({ children, me }: AuthContextProviderProps) {
+  const [state, setState] = useState<Me | null>(me || null);
+
+  useEffect(() => {
+    if (me !== state) {
+      setState(me);
+    }
+  }, [me, state]);
+
+  return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>;
+}
+
+export function login() {
+  // Placeholder for login logic
 }
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (context === null) {
-    throw new Error("useAuth must be used within an AuthProvider");
+  if (context === EMPTY_CONTEXT) {
+    throw new Error("useAuth must be used within a AuthProvider");
   }
   return context;
 }

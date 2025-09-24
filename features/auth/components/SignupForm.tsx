@@ -12,6 +12,7 @@ import AuthButton from "./AuthButton";
 import { toast } from "sonner";
 import { safeAsync } from "@/lib/safeAsync";
 import { LoginResponse } from "@/types/auth.type";
+import { logInfo } from "@/lib/logger";
 
 const defaultValues = {
   name: "",

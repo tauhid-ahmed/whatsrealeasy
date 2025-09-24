@@ -13,6 +13,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { LoginResponse } from "@/types/auth.type";
 import { safeAsync } from "@/lib/safeAsync";
+import { roleBasedPaths } from "@/paths";
 
 export default function LoginForm() {
   const form = useForm<LoginFormSchema>({
@@ -33,6 +34,8 @@ export default function LoginForm() {
       });
       const loginResponse: LoginResponse = await response.json();
       toast.success(loginResponse.message);
+      window.location.href =
+        roleBasedPaths[loginResponse.data.role as keyof typeof roleBasedPaths];
     });
   };
 

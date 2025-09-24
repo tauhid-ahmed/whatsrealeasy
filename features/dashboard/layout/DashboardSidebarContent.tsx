@@ -6,6 +6,7 @@ import DashboardActiveLink from "./DashboardActiveLink";
 import { cn } from "@/lib/utils";
 
 import { Users, BarChart3, CalendarDays, PhoneCall, Hash } from "lucide-react";
+import LogoutButton from "@/components/LogoutButton";
 
 export type SidebarItemType = {
   name: string;
@@ -67,6 +68,9 @@ export default function SidebarContent({
               </DashboardActiveLink>
             </li>
           ))}
+        <li>
+          <LogoutButton />
+        </li>
       </ul>
     </div>
   );

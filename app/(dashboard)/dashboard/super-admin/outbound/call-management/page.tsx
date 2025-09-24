@@ -624,7 +624,7 @@ function TableHeaderItem({
       )}
     >
       <Link
-        href={`/dashboard/admin/call-management?${urlParams.toString()}`}
+        href={`/dashboard/super-admin/call-management?${urlParams.toString()}`}
         className={cn("flex items-center p-2 rounded")}
       >
         <span className="inline-flex gap-1 items-center font-semibold relative">

@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
-import "@/styles/globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import "@/setup/logger";
-import { getServerAuth } from "@/lib/getServerAuth";
+import { getMe } from "@/lib/getServerAuth";
+import AuthProvider from "@/context/AuthContext";
+import "@/styles/globals.css";
+import "@/lib/logger";
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -20,11 +21,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  await getServerAuth();
+  const me = await getMe();
+  console.log({ me });
   return (
     <html lang="en">
       <body className={`${roboto.variable} antialiased`}>
-        {children} <Toaster position="top-right" />
+        <AuthProvider me={me}>
+          {children}
+          <Toaster position="top-right" />
+        </AuthProvider>
       </body>
     </html>
   );
