@@ -62,7 +62,7 @@ export function ForgotPasswordForm() {
                 name="email"
                 placeholder="Enter your email"
               >
-                <LucideMail className="size-9 p-2.5 absolute right-0 bottom-0" />
+                <LucideMail className="size-9 p-2.5 absolute right-0 bottom-0 text-muted-foreground" />
               </TextField>
             </fieldset>
             <div className="mt-4">

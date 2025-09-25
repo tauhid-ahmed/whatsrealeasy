@@ -40,7 +40,7 @@ export default function AuthButton({
 }: AuthButtonProps) {
   return (
     <Button
-      className={cn("rounded-full bg-blue", className)}
+      className={cn("rounded-full bg-blue overflow-hidden", className)}
       variant={variant}
       size={size}
       disabled={isLoading || props.disabled}

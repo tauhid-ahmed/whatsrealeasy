@@ -16,8 +16,6 @@ export async function getMe(): Promise<Me | null> {
       },
     });
 
-    console.log(response);
-
     if (!response.ok) return null;
     const responseData: MeResponse = await response.json();
 

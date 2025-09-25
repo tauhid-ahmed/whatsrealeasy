@@ -1,11 +1,13 @@
-import { getMe } from "@/lib/getServerAuth";
+"use client";
+
+import { useAuth } from "@/context/AuthContext";
 import { loginPath } from "@/paths";
 import { redirect } from "next/navigation";
 
-export default async function AdminDashboardLayout({
+export default function AdminDashboardLayout({
   children,
 }: React.PropsWithChildren) {
-  const me = await getMe();
+  const me = useAuth();
   if (!me || !me?.role.includes("super_admin")) return redirect(loginPath());
   return children;
 }

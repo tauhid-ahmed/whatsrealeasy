@@ -1,14 +1,23 @@
+"use client";
+
 import Image from "next/image";
 import authBackgroundImage from "@/assets/images/auth-background.svg";
-import { getMe } from "@/lib/getServerAuth";
 import { roleBasedPaths } from "@/paths";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+import { useEffect } from "react";
 
-export default async function AuthLayout({
-  children,
-}: React.PropsWithChildren) {
-  const me = await getMe();
-  if (!me?.isActive)
+export default function AuthLayout({ children }: React.PropsWithChildren) {
+  const me = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (me?.role) {
+      router.push(roleBasedPaths[me.role as keyof typeof roleBasedPaths]);
+    }
+  }, [me, router]);
+
+  if (!me) {
     return (
       <div className="h-screen w-full flex items-center justify-center relative bg-[#05162b]">
         <div className="absolute hidden lg:flex items-center justify-center -translate-y-10 opacity-10">
@@ -24,5 +33,7 @@ export default async function AuthLayout({
         </div>
       </div>
     );
-  return redirect(roleBasedPaths[me.role as keyof typeof roleBasedPaths]);
+  }
+
+  return null;
 }

@@ -36,11 +36,19 @@ export default function LoginForm() {
       toast.success(loginResponse.message);
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      if (loginResponse.data.role !== "super_admin")
+      if (
+        loginResponse?.data?.role === "admin" ||
+        loginResponse?.data?.role === "user"
+      ) {
         return (window.location.href = "/coming-soon");
+      }
 
-      return (window.location.href =
-        roleBasedPaths[loginResponse.data.role as keyof typeof roleBasedPaths]);
+      if (loginResponse?.data?.role === "super_admin") {
+        return (window.location.href =
+          roleBasedPaths[loginResponse?.data?.role]);
+      }
+
+      return null;
     });
   };
 

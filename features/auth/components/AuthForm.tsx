@@ -66,7 +66,7 @@ function AuthCardLink({
     <Link
       href={href}
       className={cn(
-        "text-blue-600 dark:text-blue-400 font-semibold hover:underline underline-offset-2 focus:underline active:underline text-xs",
+        "text-blue-500 dark:text-blue-400 font-semibold hover:underline underline-offset-2 focus:underline active:underline text-xs",
         className
       )}
       {...props}

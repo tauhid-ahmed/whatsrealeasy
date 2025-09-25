@@ -1,6 +1,5 @@
 "use client";
 
-import { logInfo } from "@/lib/logger";
 import { Me } from "@/types/auth.type";
 import { createContext, useContext, useState, useEffect } from "react";
 
@@ -27,10 +26,6 @@ export function AuthProvider({ children, me }: AuthContextProviderProps) {
   }, [me, state]);
 
   return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>;
-}
-
-export function login() {
-  // Placeholder for login logic
 }
 
 export function useAuth() {
