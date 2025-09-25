@@ -24,7 +24,7 @@ export default async function RootLayout({
   const me = await getMe();
   console.log({ me });
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${roboto.variable} antialiased`}>
         <AuthProvider me={me}>
           {children}

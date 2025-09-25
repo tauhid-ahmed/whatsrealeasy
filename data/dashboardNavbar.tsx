@@ -51,18 +51,18 @@ export const dashboardNavigation = {
     },
     sub: {
       outbound: [
-        {
-          name: "Switch to inbound calls",
-          icon: "userManagement",
-          href: paths.superAdminInboundAnalyticsPath(),
-        },
+        // {
+        //   name: "Switch to inbound calls",
+        //   icon: "userManagement",
+        //   href: paths.superAdminInboundAnalyticsPath(),
+        // },
       ],
       inbound: [
-        {
-          name: "Switch to outbound calls",
-          icon: "userManagement",
-          href: paths.superAdminOutboundAnalyticsPath(),
-        },
+        // {
+        //   name: "Switch to outbound calls",
+        //   icon: "userManagement",
+        //   href: paths.superAdminOutboundAnalyticsPath(),
+        // },
       ],
     },
   },

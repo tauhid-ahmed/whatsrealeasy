@@ -39,8 +39,6 @@ export default function Sidebar({ children }: React.PropsWithChildren) {
       <div className="flex-1 space-y-[var(--_sidebar-spacing)] bg-dark2 rounded-bl rounded-br">
         {children}
       </div>
-
-      {/* <SidebarFooter /> */}
     </motion.nav>
   );
 }

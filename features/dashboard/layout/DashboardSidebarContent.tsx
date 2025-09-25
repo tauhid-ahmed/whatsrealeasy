@@ -5,8 +5,16 @@ import { motion } from "framer-motion";
 import DashboardActiveLink from "./DashboardActiveLink";
 import { cn } from "@/lib/utils";
 
-import { Users, BarChart3, CalendarDays, PhoneCall, Hash } from "lucide-react";
+import {
+  Users,
+  BarChart3,
+  CalendarDays,
+  PhoneCall,
+  Hash,
+  AnchorIcon,
+} from "lucide-react";
 import LogoutButton from "@/components/LogoutButton";
+import CallModeSwitch from "@/components/CallModeSwitch";
 
 export type SidebarItemType = {
   name: string;
@@ -34,8 +42,8 @@ export default function SidebarContent({
 }: SidebarContentType) {
   const { isCollapsedSidebar, isExpanded } = useSidebar();
   return (
-    <div className="h-full flex flex-col justify-between gap-6 px-2">
-      <ul className={cn("space-y-2")}>
+    <div className="h-full flex flex-col justify-between gap-6 px-2 overflow-hidden">
+      <ul className={cn("space-y-2 overflow-hidden")}>
         {mainItems.map((item) => {
           const Icon = icons[item.icon as keyof typeof icons];
           return (
@@ -68,8 +76,11 @@ export default function SidebarContent({
               </DashboardActiveLink>
             </li>
           ))}
+        <li>
+          <CallModeSwitch />
+        </li>
         <li className="mb-4">
-          <LogoutButton />
+          <SidebarLogoutButton />
         </li>
       </ul>
     </div>
@@ -98,5 +109,14 @@ function AnimatedLabel({ children }: React.PropsWithChildren) {
         {children}
       </motion.span>
     )
+  );
+}
+
+function SidebarLogoutButton() {
+  return (
+    <LogoutButton>
+      <AnchorIcon className="size-4" />
+      <AnimatedLabel>Logout</AnimatedLabel>
+    </LogoutButton>
   );
 }
