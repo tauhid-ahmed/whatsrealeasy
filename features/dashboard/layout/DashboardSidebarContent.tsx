@@ -59,7 +59,7 @@ export default function SidebarContent({
             <li key={item.name}>
               <DashboardActiveLink
                 className={cn(
-                  "flex items-center gap-2 whitespace-nowrap",
+                  "flex items-center gap-2 whitespace-nowrap bg-blue text-white rounded-md",
                   isExpanded && "py-2 px-6"
                 )}
                 href={item.href}
@@ -68,7 +68,7 @@ export default function SidebarContent({
               </DashboardActiveLink>
             </li>
           ))}
-        <li>
+        <li className="mb-4">
           <LogoutButton />
         </li>
       </ul>

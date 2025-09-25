@@ -3,17 +3,30 @@ import { z } from "zod";
 
 export const env = createEnv({
   server: {
-    API_BASE_URL: z.url(),
+    API_BASE_URL: z.string().url(),
     NODE_ENV: z.enum(["development", "test", "production"]),
+    APP_NAME: z.string(),
+    APP_DESCRIPTION: z.string(),
   },
   client: {
-    NEXT_PUBLIC_API_BASE_URL: z.string(),
+    NEXT_PUBLIC_API_BASE_URL: z.string().url(),
     NEXT_PUBLIC_NODE_ENV: z.enum(["development", "test", "production"]),
+    NEXT_PUBLIC_APP_NAME: z.string(),
+    NEXT_PUBLIC_APP_DESCRIPTION: z.string(),
+    NEXT_PUBLIC_OUTBOUND_EMAIL: z.string().email(),
+    NEXT_PUBLIC_INBOUND_EMAIL: z.string().email(),
   },
   runtimeEnv: {
     API_BASE_URL: process.env.API_BASE_URL,
-    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
     NODE_ENV: process.env.NODE_ENV,
-    NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
+    APP_NAME: process.env.APP_NAME,
+    APP_DESCRIPTION: process.env.APP_DESCRIPTION,
+
+    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
+    NEXT_PUBLIC_NODE_ENV: process.env.NEXT_PUBLIC_NODE_ENV,
+    NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
+    NEXT_PUBLIC_APP_DESCRIPTION: process.env.NEXT_PUBLIC_APP_DESCRIPTION,
+    NEXT_PUBLIC_OUTBOUND_EMAIL: process.env.NEXT_PUBLIC_OUTBOUND_EMAIL,
+    NEXT_PUBLIC_INBOUND_EMAIL: process.env.NEXT_PUBLIC_INBOUND_EMAIL,
   },
 });

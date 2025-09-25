@@ -1,8 +1,10 @@
+import { env } from "@/env";
+
 export default function AdminCalendarPage() {
   return (
     <div className="flex justify-center items-center p-6 bg-white">
       <iframe
-        src="https://calendar.google.com/calendar/embed?src=tauhidahmed.dev%40gmail.com&ctz=Asia%2FDhaka"
+        src={`https://calendar.google.com/calendar/embed?src=${env.NEXT_PUBLIC_INBOUND_EMAIL}`}
         style={{
           border: "0",
           backgroundColor: "transparent",

@@ -3,6 +3,7 @@
 import Button from "./Button";
 import { loginPath } from "@/paths";
 import { cn } from "@/lib/utils";
+import { LogoutAnchorIcon } from "./Icons";
 
 export default function LogoutButton({ className }: { className?: string }) {
   async function handleLogout() {
@@ -13,9 +14,13 @@ export default function LogoutButton({ className }: { className?: string }) {
   return (
     <Button
       size="sm"
-      className={cn("w-full", className)}
+      className={cn(
+        "w-full text-red-500 bg-transparent focus-within:border-red-500 active:border-red-500 outline-red-500",
+        className
+      )}
       onClick={handleLogout}
     >
+      <LogoutAnchorIcon />
       Logout
     </Button>
   );

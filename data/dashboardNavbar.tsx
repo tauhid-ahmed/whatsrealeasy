@@ -7,41 +7,45 @@ export const dashboardNavigation = {
         {
           name: "Analytics",
           icon: "barChart",
-          href: paths.superAdminAnalyticsPath(),
-        },
-        {
-          name: "Calendar",
-          icon: "calender",
-          href: paths.superAdminCalenderPath(),
+          href: paths.superAdminOutboundAnalyticsPath(),
         },
 
         {
           name: "Number Management",
           icon: "number",
-          href: paths.superAdminNumberManagementPath(),
+          href: paths.superAdminOutboundNumberManagementPath(),
         },
         {
-          name: "Call Management",
+          name: "Call Logs",
           icon: "callManagement",
-          href: paths.superAdminCallManagementPath(),
+          href: paths.superAdminOutboundCallLogsPath(),
+        },
+        {
+          name: "Calendar",
+          icon: "calender",
+          href: paths.superAdminOutboundCalenderPath(),
         },
       ],
       inbound: [
         {
           name: "Analytics",
           icon: "barChart",
-          href: paths.superAdminAnalyticsPath(),
+          href: paths.superAdminInboundAnalyticsPath(),
+        },
+        {
+          name: "Agent Management",
+          icon: "barChart",
+          href: paths.superAdminInboundAgentManagementPath(),
+        },
+        {
+          name: "Call Logs",
+          icon: "number",
+          href: paths.superAdminInboundCallLogsPath(),
         },
         {
           name: "Calendar",
           icon: "calender",
-          href: paths.superAdminCalenderPath(),
-        },
-
-        {
-          name: "Number Management",
-          icon: "number",
-          href: paths.superAdminNumberManagementPath(),
+          href: paths.superAdminInboundCalenderPath(),
         },
       ],
     },
@@ -50,14 +54,14 @@ export const dashboardNavigation = {
         {
           name: "Switch to inbound calls",
           icon: "userManagement",
-          href: paths.superAdminUserManagementPath(),
+          href: paths.superAdminInboundAnalyticsPath(),
         },
       ],
       inbound: [
         {
           name: "Switch to outbound calls",
           icon: "userManagement",
-          href: paths.superAdminUserManagementPath(),
+          href: paths.superAdminOutboundAnalyticsPath(),
         },
       ],
     },

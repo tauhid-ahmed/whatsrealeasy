@@ -7,17 +7,27 @@ export const resetPasswordPath = () => `${PREFIX_PATH}/reset-password`;
 
 // Admin dashboard paths
 export const PREFIX_ADMIN_PATH = "/dashboard";
-export const superAdminAnalyticsPath = () =>
+
+// Outbound
+export const superAdminOutboundAnalyticsPath = () =>
   `${PREFIX_ADMIN_PATH}/super-admin/outbound/analytics`;
-export const superAdminCallManagementPath = () =>
-  `${PREFIX_ADMIN_PATH}/super-admin/outbound/call-management`;
-export const superAdminNumberManagementPath = () =>
+export const superAdminOutboundCallLogsPath = () =>
+  `${PREFIX_ADMIN_PATH}/super-admin/outbound/call-logs`;
+export const superAdminOutboundNumberManagementPath = () =>
   `${PREFIX_ADMIN_PATH}/super-admin/outbound/number-management`;
-export const superAdminCalenderPath = () =>
+export const superAdminOutboundCalenderPath = () =>
   `${PREFIX_ADMIN_PATH}/super-admin/outbound/calender`;
-export const superAdminUserManagementPath = () =>
-  `${PREFIX_ADMIN_PATH}/super-admin/outbound/user-management`;
+
+// Inbound
+export const superAdminInboundAnalyticsPath = () =>
+  `${PREFIX_ADMIN_PATH}/super-admin/inbound/analytics`;
+export const superAdminInboundAgentManagementPath = () =>
+  `${PREFIX_ADMIN_PATH}/super-admin/inbound/agent-management`;
+export const superAdminInboundCallLogsPath = () =>
+  `${PREFIX_ADMIN_PATH}/super-admin/inbound/call-logs`;
+export const superAdminInboundCalenderPath = () =>
+  `${PREFIX_ADMIN_PATH}/super-admin/inbound/calender`;
 
 export const roleBasedPaths = {
-  super_admin: superAdminAnalyticsPath(),
+  super_admin: superAdminOutboundAnalyticsPath(),
 };
