@@ -33,6 +33,7 @@ export default function LoginForm() {
         body: JSON.stringify(data),
       });
       const loginResponse: LoginResponse = await response.json();
+      if (!loginResponse.success) return toast.error(loginResponse.message);
       toast.success(loginResponse.message);
       await new Promise((resolve) => setTimeout(resolve, 1000));
 

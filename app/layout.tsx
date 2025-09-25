@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "sonner";
 import { getMe } from "@/lib/getServerAuth";
 import AuthProvider from "@/context/AuthContext";
 import "@/styles/globals.css";
@@ -28,7 +28,13 @@ export default async function RootLayout({
       <body className={`${roboto.variable} antialiased`}>
         <AuthProvider me={me}>
           {children}
-          <Toaster position="top-right" theme="dark" />
+          <Toaster
+            position="top-right"
+            theme="dark"
+            richColors={true}
+            expand={true}
+            closeButton={true}
+          />
         </AuthProvider>
       </body>
     </html>

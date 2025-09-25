@@ -43,6 +43,7 @@ export default function SignupForm() {
       });
       const signupResponse: SignUpAPIResponse = await response.json();
       logInfo(signupResponse);
+      if (!signupResponse.success) return toast.error(signupResponse.message);
       toast.success(signupResponse.message);
       await new Promise((resolve) => setTimeout(resolve, 1000));
       router.push(loginPath());
