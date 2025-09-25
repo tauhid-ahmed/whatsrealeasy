@@ -16,6 +16,8 @@ import {
 import AuthButton from "./AuthButton";
 import { forgotPasswordPath, loginPath } from "@/paths";
 import { useSearchParams } from "next/navigation";
+import { safeAsync } from "@/lib/safeAsync";
+import { toast } from "sonner";
 
 export function ForgotPasswordForm() {
   const form = useForm<ForgotPasswordFormSchema>({
@@ -25,7 +27,20 @@ export function ForgotPasswordForm() {
       email: "",
     },
   });
-  const onSubmit = async () => {};
+  const onSubmit = async () => {
+    return safeAsync(async () => {
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: form.getValues("email"),
+        }),
+      });
+
+      const responseBody = await response.json();
+      toast.success(responseBody.message);
+    });
+  };
 
   return (
     <AuthCard>
@@ -78,12 +93,29 @@ export function NewPasswordForm() {
     mode: "all",
     resolver: zodResolver(resetPassword),
     defaultValues: {
-      new_password: "",
-      confirm_new_password: "",
+      newPassword: "",
+      confirmPassword: "",
       token,
     },
   });
-  const onSubmit = async () => {};
+  const onSubmit = async () => {
+    return safeAsync(async () => {
+      const response = await fetch("/api/auth/new-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          newPassword: form.getValues("newPassword"),
+          confirmPassword: form.getValues("confirmPassword"),
+          token,
+        }),
+      });
+
+      const responseBody = await response.json();
+      toast.success(responseBody.message);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      window.location.href = loginPath();
+    });
+  };
 
   return (
     <AuthCard>
@@ -102,12 +134,12 @@ export function NewPasswordForm() {
             <fieldset className="space-y-6">
               <PasswordField
                 label="Password"
-                name="new_password"
+                name="newPassword"
                 placeholder="Enter your password"
               />
               <PasswordField
                 label="Confirm Password"
-                name="confirm_new_password"
+                name="confirmPassword"
                 placeholder="Confirm your password"
               />
             </fieldset>

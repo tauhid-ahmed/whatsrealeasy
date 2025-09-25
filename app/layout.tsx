@@ -28,7 +28,7 @@ export default async function RootLayout({
       <body className={`${roboto.variable} antialiased`}>
         <AuthProvider me={me}>
           {children}
-          <Toaster position="top-right" />
+          <Toaster position="top-right" theme="dark" />
         </AuthProvider>
       </body>
     </html>

@@ -1,5 +1,6 @@
 import { toast } from "sonner";
 import "@/lib/logger";
+import { logError } from "@/lib/logger";
 
 export type SafeResult<T> = {
   data: T | null;

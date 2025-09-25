@@ -1,3 +1,4 @@
+import LogoutButton from "@/components/LogoutButton";
 import React from "react";
 
 export default function ComingSoon() {
@@ -34,13 +35,7 @@ export default function ComingSoon() {
         <p className="text-gray-300 text-base sm:text-lg md:text-xl mb-10 leading-relaxed px-2 sm:px-0">
           We’re putting the finishing touches on something amazing. Stay tuned!
         </p>
-        <a
-          href="/"
-          className="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-lg hover:bg-indigo-700 transition text-sm sm:text-base"
-          tabIndex={0}
-        >
-          Back to Home
-        </a>
+        <LogoutButton />
       </div>
     </div>
   );
