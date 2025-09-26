@@ -130,7 +130,7 @@ export function SuccessModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="sm:max-w-md text-center"
+        className="sm:max-w-md text-center bg-slate-900 border-slate-800"
         showCloseButton={false}
       >
         <div className="flex flex-col items-center justify-center space-y-6 py-8">
@@ -163,7 +163,7 @@ export function SuccessModal({
             <DialogDescription asChild>
               <p
                 className={cn(
-                  "text-lg font-medium transition-opacity duration-300",
+                  "text-lg font-medium transition-opacity duration-300 text-white",
                   !isSuccess ? "opacity-100" : "opacity-0"
                 )}
               >
