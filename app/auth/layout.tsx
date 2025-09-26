@@ -20,7 +20,7 @@ export default function AuthLayout({ children }: React.PropsWithChildren) {
   if (!me) {
     return (
       <div className="h-screen w-full flex items-center justify-center relative bg-[#05162b]">
-        <div className="absolute hidden lg:flex items-center justify-center -translate-y-10 opacity-10">
+        <div className="absolute flex items-center justify-center -translate-y-10 opacity-10">
           <Image
             src={authBackgroundImage}
             alt="Auth Background"
@@ -28,7 +28,7 @@ export default function AuthLayout({ children }: React.PropsWithChildren) {
           />
         </div>
         <div className="bg-gradient-to-br from-[#05162b]/50 via-transparent to-[#05162b]/50 absolute inset-0 hidden lg:block"></div>
-        <div className="flex items-center justify-center z-20 size-full">
+        <div className="flex items-center justify-center z-20 size-full px-2">
           {children}
         </div>
       </div>

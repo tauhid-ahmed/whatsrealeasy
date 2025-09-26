@@ -45,7 +45,7 @@ export default function SignupForm() {
       logInfo(signupResponse);
       if (!signupResponse.success) return toast.error(signupResponse.message);
       toast.success(signupResponse.message);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 500));
       router.push(loginPath());
     });
   };

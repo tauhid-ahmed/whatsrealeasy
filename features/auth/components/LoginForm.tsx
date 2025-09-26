@@ -35,7 +35,7 @@ export default function LoginForm() {
       const loginResponse: LoginResponse = await response.json();
       if (!loginResponse.success) return toast.error(loginResponse.message);
       toast.success(loginResponse.message);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       if (
         loginResponse?.data?.role === "admin" ||
