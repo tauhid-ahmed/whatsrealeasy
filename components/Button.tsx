@@ -62,7 +62,7 @@ export default function Button({
   return (
     <Comp
       className={cn(
-        "font-sans inline-flex items-center justify-center transition-[transform_opacity] focus:outline-none focus:ring focus:ring-offset-px ring-primary tracking-custom cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:hover:bg-transparent disabled:hover:text-inherit duration-300 hover:-translate-y-px gap-2.5 [&>svg]:size-4 whitespace-nowrap rounded text-sm",
+        "font-sans inline-flex items-center justify-center transition-[transform_opacity] focus:outline-none focus:ring focus:ring-offset-px ring-primary tracking-custom cursor-pointer disabled:opacity-85 disabled:shadow-none duration-300 hover:-translate-y-px gap-2.5 [&>svg]:size-4 whitespace-nowrap rounded text-sm",
         buttonVariantClasses[variant]?.[tone],
         buttonSizeClasses[size],
         buttonWeightClasses[weight],

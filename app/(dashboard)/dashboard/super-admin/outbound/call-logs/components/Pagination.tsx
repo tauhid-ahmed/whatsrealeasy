@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import Button from "@/components/Button";
 import { useTransition } from "react";
+import { LucideChevronsLeft, LucideChevronsRight } from "lucide-react";
 
 type PaginationProps = {
   totalPages: number;
@@ -53,18 +54,20 @@ export default function Pagination({
       {currentPage}
       <nav className="flex justify-center gap-2 mt-4 flex-wrap">
         <Button
+          size="sm"
           disabled={currentPage === 1 || isPending}
           onClick={() => navigateToPage(currentPage - 1)}
         >
-          Prev
+          <LucideChevronsLeft />
         </Button>
 
         {pages.map((page) => (
           <Button
             key={page}
             onClick={() => navigateToPage(page)}
+            size="sm"
             disabled={isPending}
-            className={`px-3 py-1 rounded-md transition ${
+            className={`transition ${
               page === currentPage
                 ? "bg-blue-600 text-white"
                 : "bg-gray-800 text-gray-300 hover:bg-gray-700"
@@ -75,10 +78,11 @@ export default function Pagination({
         ))}
 
         <Button
+          size="sm"
           disabled={currentPage >= maxPages || isPending}
           onClick={() => navigateToPage(currentPage + 1)}
         >
-          Next
+          <LucideChevronsRight />
         </Button>
       </nav>
     </>
