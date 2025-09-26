@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Button from "@/components/Button";
 import { useTransition } from "react";
 import { LucideChevronsLeft, LucideChevronsRight } from "lucide-react";
+import PageLimits from "./PageLimits";
 
 type PaginationProps = {
   totalPages: number;
@@ -22,7 +23,7 @@ export default function Pagination({
   const [isPending, startTransition] = useTransition();
 
   // Use the actual totalPages, but cap it at 20 if needed
-  const maxPages = Math.max(totalPages, 20); // change to min
+  const maxPages = totalPages; // change to min
 
   const navigateToPage = (page: number) => {
     page = Math.max(1, Math.min(page, maxPages));
@@ -51,7 +52,8 @@ export default function Pagination({
 
   return (
     <>
-      {currentPage}
+      <PageLimits />
+      showing page {currentPage} of {totalPages}
       <nav className="flex justify-center gap-2 mt-4 flex-wrap">
         <Button
           size="sm"

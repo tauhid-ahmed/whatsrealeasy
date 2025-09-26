@@ -22,7 +22,7 @@ export default async function CallLogs({ searchParams }: TableProps) {
   const tableHeader = Object.keys(tableData[0]);
 
   const totalItems = tableData.length;
-  const totalPages = Math.ceil(totalItems / limit);
+  const totalPages = Math.ceil(200 / limit);
   return (
     <div>
       <Table tableBody={tableData} tableHeader={tableHeader} />

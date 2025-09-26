@@ -49,12 +49,6 @@ export default function Table({ tableBody, tableHeader }: TableProps) {
   );
 }
 
-type TableHeaderItemProps = {
-  prop: string;
-  currentSort: string;
-  sortDirection: "asc" | "desc";
-};
-
 export function TableHeaderItem({ prop, currentSort, sortDirection }: any) {
   const searchParams = new URLSearchParams(useSearchParams());
   const isActive = currentSort === prop;
@@ -86,14 +80,14 @@ export function TableHeaderItem({ prop, currentSort, sortDirection }: any) {
     >
       <Link
         href={`?${handleSort()}`}
-        className="inline-flex gap-1 items-center font-semibold relative"
+        className="inline-flex gap-1.5 items-center leading-0 font-semibold relative"
       >
         {prop}
         <span
           className={cn(
-            "ml-1 text-gray-100 transition opacity-0 transition-200 group-hover:opacity-100",
+            "text-gray-100 transition opacity-0 transition-200 group-hover:opacity-100 rounded",
             {
-              "opacity-100 group-hover:opacity-100 bg-slate-900/70": isActive,
+              "opacity-100 group-hover:opacity-100 bg-slate-900/80": isActive,
             }
           )}
         >
