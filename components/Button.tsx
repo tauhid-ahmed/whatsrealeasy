@@ -1,7 +1,7 @@
 import { Slot } from "@radix-ui/react-slot";
 import { cn } from "@/lib/utils";
 
-type Variant = "primary" | "secondary";
+type Variant = "primary" | "secondary" | "ghost";
 type Tone = "default" | "outline";
 type Weight = "bold" | "medium";
 type Size = "sm" | "md" | "lg" | "icon";
@@ -9,13 +9,18 @@ type Shape = "default" | "pill";
 
 const buttonVariantClasses: Record<Variant, Record<Partial<Tone>, string>> = {
   primary: {
-    default: "bg-primary text-white hover:bg-color-primary/80",
+    default: "bg-primary text-white hover:bg-primary/80",
     outline:
       "border border-primary text-primary hover:bg-primary hover:text-white",
   },
   secondary: {
     default: "bg-white text-gray-950 hover:opacity-90",
     outline: "border border-gray-300 text-gray-950",
+  },
+  ghost: {
+    default: "bg-transparent text-gray-100 hover:bg-gray-700 hover:text-white",
+    outline:
+      "border border-gray-300 bg-transparent text-gray-100 hover:bg-gray-700 hover:text-white",
   },
 };
 
@@ -62,7 +67,7 @@ export default function Button({
   return (
     <Comp
       className={cn(
-        "font-sans inline-flex items-center justify-center transition-[transform_opacity] focus:outline-none focus:ring focus:ring-offset-px ring-primary tracking-custom cursor-pointer disabled:opacity-85 disabled:shadow-none duration-300 hover:-translate-y-px gap-2.5 [&>svg]:size-4 whitespace-nowrap rounded text-sm",
+        "font-sans inline-flex items-center justify-center transition-[transform_opacity] focus:outline-none focus:ring focus:ring-offset-px ring-primary tracking-custom cursor-pointer disabled:opacity-70 disabled:shadow-none duration-300 hover:-translate-y-px gap-2.5 [&>svg]:size-4 whitespace-nowrap rounded text-sm disabled:pointer-events-none",
         buttonVariantClasses[variant]?.[tone],
         buttonSizeClasses[size],
         buttonWeightClasses[weight],

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import Button from "@/components/Button";
 import { useTransition } from "react";
@@ -22,11 +21,8 @@ export default function Pagination({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  // Use the actual totalPages, but cap it at 20 if needed
-  const maxPages = totalPages; // change to min
-
   const navigateToPage = (page: number) => {
-    page = Math.max(1, Math.min(page, maxPages));
+    page = Math.max(1, Math.min(page, totalPages));
     const params = new URLSearchParams(searchParams.toString());
     page === 1 ? params.delete("page") : params.set("page", page.toString());
     params.set("limit", pageSize.toString());
@@ -38,7 +34,7 @@ export default function Pagination({
 
   // Always show 5 pages, but don't exceed maxPages
   let startPage = Math.max(1, currentPage - 2);
-  let endPage = Math.min(startPage + 4, maxPages);
+  let endPage = Math.min(startPage + 4, totalPages);
 
   // Adjust startPage if we're near the end
   if (endPage - startPage < 4) {
@@ -51,14 +47,17 @@ export default function Pagination({
   );
 
   return (
-    <>
-      <PageLimits />
-      showing page {currentPage} of {totalPages}
-      <nav className="flex justify-center gap-2 mt-4 flex-wrap">
+    <div className="flex items-center justify-center gap-2">
+      <span className="text-gray-400 text-sm">
+        Showing <strong className="font-medium">{currentPage}</strong> of{" "}
+        <strong className="font-medium">{totalPages}</strong>
+      </span>
+      <nav className="flex justify-center gap-2 flex-wrap">
         <Button
           size="sm"
           disabled={currentPage === 1 || isPending}
           onClick={() => navigateToPage(currentPage - 1)}
+          variant="ghost"
         >
           <LucideChevronsLeft />
         </Button>
@@ -69,7 +68,8 @@ export default function Pagination({
             onClick={() => navigateToPage(page)}
             size="sm"
             disabled={isPending}
-            className={`transition ${
+            variant="ghost"
+            className={`transition bg-transparent! ${
               page === currentPage
                 ? "bg-blue-600 text-white"
                 : "bg-gray-800 text-gray-300 hover:bg-gray-700"
@@ -81,12 +81,14 @@ export default function Pagination({
 
         <Button
           size="sm"
-          disabled={currentPage >= maxPages || isPending}
+          disabled={currentPage >= totalPages || isPending}
           onClick={() => navigateToPage(currentPage + 1)}
+          variant="ghost"
         >
           <LucideChevronsRight />
         </Button>
       </nav>
-    </>
+      <PageLimits />
+    </div>
   );
 }

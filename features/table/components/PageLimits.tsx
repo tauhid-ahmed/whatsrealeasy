@@ -6,6 +6,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useRouter, useSearchParams } from "next/navigation";
+import { DEFAULT_ITEMS_PER_PAGE } from "../utils/constant";
 
 const pageLimits = ["5", "10", "15", "20"];
 
@@ -23,8 +24,13 @@ export default function PageLimits() {
   };
 
   return (
-    <Select onValueChange={handlePageLimitChange}>
-      <SelectTrigger className="w-[180px]">
+    <Select
+      defaultValue={
+        searchParams.get("limit") || DEFAULT_ITEMS_PER_PAGE.toString()
+      }
+      onValueChange={handlePageLimitChange}
+    >
+      <SelectTrigger>
         <SelectValue placeholder="Page Limit" />
       </SelectTrigger>
       <SelectContent>

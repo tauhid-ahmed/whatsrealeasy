@@ -1,7 +1,6 @@
 import { getIcon, dashboardStats } from "@/data/analyticsData";
 import AnalyticsChart from "@/features/analytics/Charts";
 import { cn } from "@/lib/utils";
-import DashboardTable from "./_table";
 
 interface TableSearchParams {
   page?: number;
@@ -56,9 +55,6 @@ export default async function AdminAnalyticsPage({ searchParams }: TableProps) {
       </div>
       <div className="mt-14">
         <AnalyticsChart />
-      </div>
-      <div className="mt-14">
-        <DashboardTable searchParams={searchParams} />
       </div>
     </>
   );

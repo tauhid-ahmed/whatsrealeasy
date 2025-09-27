@@ -5,6 +5,8 @@ export type BaseSearchParams = {
   query?: string;
 };
 
+export type SortDirection = "asc" | "desc" | null;
+
 export type TableSearchParams<T extends Record<string, unknown> = {}> =
   BaseSearchParams & T;
 
