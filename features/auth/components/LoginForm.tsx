@@ -32,6 +32,7 @@ export default function LoginForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
+      if (!response.ok) return toast.error(response.statusText);
       const loginResponse: LoginResponse = await response.json();
       if (!loginResponse.success) return toast.error(loginResponse.message);
       toast.success(loginResponse.message);

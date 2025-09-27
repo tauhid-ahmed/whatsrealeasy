@@ -17,7 +17,7 @@ export default function Table({ tableBody, tableHeader }: TableProps) {
     <>
       <table className="table-auto border-collapse border border-gray-500 w-full text-gray-300">
         <thead>
-          <tr className="border-b border-gray-500">
+          <TableRow className="border-b border-gray-500">
             {tableHeader.map((prop) => (
               <TableHeaderItem
                 key={prop}
@@ -26,22 +26,15 @@ export default function Table({ tableBody, tableHeader }: TableProps) {
                 sortDirection={sortDirection}
               />
             ))}
-          </tr>
+          </TableRow>
         </thead>
         <tbody>
           {tableBody.map((item, index) => (
-            <tr
-              key={index}
-              className="border-b border-gray-500 hover:bg-gray-800"
-            >
-              <td className="px-2 py-2">{item.userId}</td>
-              <td className="px-2 py-2">{item.id}</td>
-              <td className="px-2 py-2">{item.title}</td>
-              <td className="px-2 py-2">{item.completed.toString()}</td>
-              {/* {tableHeader.map((field) => (
-                <td className="px-2 py-2">{item[field].toString()}</td>
-              ))} */}
-            </tr>
+            <TableRow key={index}>
+              {tableHeader.map((prop) => (
+                <TableRowItem className="p-2">{item[prop]}</TableRowItem>
+              ))}
+            </TableRow>
           ))}
         </tbody>
       </table>
@@ -102,4 +95,16 @@ export function TableHeaderItem({ prop, currentSort, sortDirection }: any) {
       </Link>
     </th>
   );
+}
+
+export function TableRow({ children, className }: React.ComponentProps<"tr">) {
+  return (
+    <tr className={cn("border-b border-gray-500 hover:bg-gray-800", className)}>
+      {children}
+    </tr>
+  );
+}
+
+export function TableRowItem({ children }: React.ComponentProps<"td">) {
+  return <td>{children}</td>;
 }
