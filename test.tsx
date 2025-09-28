@@ -1,5 +1,4 @@
 import Pagination from "@/features/table/components/Pagination";
-import SearchField from "@/features/table/components/SearchField";
 import {
   Table,
   TableBody,
@@ -25,12 +24,7 @@ type TableData = {
 };
 
 type InboundCallLogsProps = {
-  searchParams: Promise<{
-    page: string;
-    limit: string;
-    sort: string;
-    q: string;
-  }>;
+  searchParams: Promise<{ page: string; limit: string; sort: string }>;
 };
 
 export default async function OutboundCallLogs({
@@ -43,14 +37,16 @@ export default async function OutboundCallLogs({
   const [sortField, sortDirection = ""] = (queryParams.sort || "").split(":");
 
   const tableData: TableData[] = await fetchTableData(
-    `https://dummyjson.com/todos?skip=${page * limit}&limit=${limit}`
+    `https://jsonplaceholder.typicode.com/todos?_start=${
+      (page - 1) * limit
+    }&_limit=${limit}`
   );
 
-  if (!tableData || !tableData.todos.length) return <TableSkeleton />;
+  if (!tableData || !tableData.length) return <TableSkeleton />;
 
-  const tableHeader = Object.keys(tableData.todos[0]);
+  const tableHeader = Object.keys(tableData[0]);
   const sorted = sortTableData(
-    tableData.todos,
+    tableData,
     sortField as keyof TableData,
     sortDirection as SortDirection
   );
@@ -58,8 +54,7 @@ export default async function OutboundCallLogs({
   const totalPages = Math.ceil(totalItems / limit);
 
   return (
-    <div className="space-y-6 pt-6">
-      <SearchField initialValue={queryParams.q} />
+    <div className="space-y-6">
       <Table>
         <TableHeader>
           <TableRow>

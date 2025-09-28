@@ -1,50 +1,56 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { LucideLoader, LucideSearch } from "lucide-react";
 
 interface SearchFieldProps {
-  defaultQuery?: string;
+  initialValue?: string;
   debounceTime?: number;
-  basePath?: string;
 }
 
 export default function SearchField({
-  defaultQuery = "",
+  initialValue,
   debounceTime = 500,
 }: SearchFieldProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [query, setQuery] = useState(defaultQuery);
-
-  // Sync input with URL on mount
-  useEffect(() => {
-    const initialQuery = searchParams.get("query") || defaultQuery;
-    setQuery(initialQuery);
-  }, [searchParams, defaultQuery]);
+  const [query, setQuery] = useState(initialValue || "");
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      const params = new URLSearchParams();
-
-      if (query.trim()) {
-        params.set("query", query);
+      const params = new URLSearchParams(searchParams.toString());
+      if (query) {
+        params.set("q", query);
+      } else {
+        params.delete("q");
       }
-      // Do NOT copy any pagination params; this resets pagination
 
-      router.push(`/dashboard/admin/call-management?${params.toString()}`);
+      startTransition(() => {
+        router.push(`?${params.toString()}`);
+      });
     }, debounceTime);
 
     return () => clearTimeout(handler);
-  }, [query, debounceTime, router]);
+  }, [query, debounceTime, router, searchParams]);
 
   return (
-    <input
-      type="text"
-      value={query}
-      onChange={(e) => setQuery(e.target.value)}
-      placeholder="Search..."
-      className="border border-gray-400 rounded px-3 py-1 text-sm w-60"
-    />
+    <div className="inline-flex items-center border border-slate-500 gap-1 pr-3 rounded overflow-hidden focus-within:border-primary">
+      <div className="size-7 inline-flex items-center justify-center bg-slate-500">
+        {isPending ? (
+          <LucideLoader size="14" className="animate-spin" />
+        ) : (
+          <LucideSearch size="14" />
+        )}
+      </div>
+      <input
+        type="text"
+        placeholder="Search..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        className="border-none bg-transparent outline-none placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0 w-52 text-gray-100"
+      />
+    </div>
   );
 }

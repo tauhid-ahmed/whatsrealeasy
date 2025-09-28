@@ -12,12 +12,12 @@ export function TableSkeleton({
   showHeader = true,
 }: TableSkeletonProps) {
   return (
-    <table className="table-auto border-collapse border border-gray-500 w-full">
+    <table className="table-auto border-collapse border border-gray-500 w-full rounded">
       {showHeader && (
         <thead>
           <tr>
             {Array.from({ length: columns }).map((_, i) => (
-              <th key={i} className="p-2 bg-gray-700 animate-pulse">
+              <th key={i} className="p-3 bg-gray-700 animate-pulse">
                 <div className="h-4 bg-gray-500 rounded w-3/4 mx-auto" />
               </th>
             ))}
@@ -49,7 +49,7 @@ export function TableRowSkeleton({ columns = 5 }: TableRowSkeletonProps) {
 
 export function TableCellSkeleton() {
   return (
-    <td className="p-2">
+    <td className="px-4 py-4">
       <div className="h-4 bg-gray-500 rounded animate-pulse w-full" />
     </td>
   );

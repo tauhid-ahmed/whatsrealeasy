@@ -17,9 +17,8 @@ export default function PageLimits() {
   const handlePageLimitChange = (limit: string) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("limit", limit);
-
+    params.delete("page");
     const url = `?${params.toString()}`;
-
     router.push(url);
   };
 
