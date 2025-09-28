@@ -21,6 +21,7 @@ export default function SearchField({
   useEffect(() => {
     const handler = setTimeout(() => {
       const params = new URLSearchParams(searchParams.toString());
+
       if (query) {
         params.set("q", query);
       } else {
@@ -33,15 +34,15 @@ export default function SearchField({
     }, debounceTime);
 
     return () => clearTimeout(handler);
-  }, [query, debounceTime, router, searchParams]);
+  }, [query, debounceTime, router]);
 
   return (
     <div className="inline-flex items-center border border-slate-500 gap-1 pr-3 rounded overflow-hidden focus-within:border-primary">
       <div className="size-7 inline-flex items-center justify-center bg-slate-500">
         {isPending ? (
-          <LucideLoader size="14" className="animate-spin" />
+          <LucideLoader size={14} className="animate-spin" />
         ) : (
-          <LucideSearch size="14" />
+          <LucideSearch size={14} />
         )}
       </div>
       <input
