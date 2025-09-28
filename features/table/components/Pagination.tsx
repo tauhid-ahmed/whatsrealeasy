@@ -69,10 +69,8 @@ export default function Pagination({
             size="sm"
             disabled={isPending}
             variant="ghost"
-            className={`transition bg-transparent! ${
-              page === currentPage
-                ? "bg-blue-600 text-white"
-                : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+            className={`transition-colors border border-transparent ${
+              page === currentPage && " text-blue-400! border-blue-500!"
             }`}
           >
             {page}

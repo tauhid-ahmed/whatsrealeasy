@@ -7,7 +7,6 @@ import {
   TableRow,
   TableBodyItem,
 } from "@/features/table/components/Table";
-import TableFallback from "@/features/table/components/TableFallback";
 import fetchTableData from "@/features/table/lib/fetchTableData";
 import sortTableData from "@/features/table/lib/sortTableData";
 import { SortDirection } from "@/features/table/types/table.type";

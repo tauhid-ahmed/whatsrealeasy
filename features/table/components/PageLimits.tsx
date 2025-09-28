@@ -8,7 +8,7 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { DEFAULT_ITEMS_PER_PAGE } from "../utils/constant";
 
-const pageLimits = ["5", "10", "15", "20"];
+const pageLimits = ["5", "10", "15", "20", "50"];
 
 export default function PageLimits() {
   const searchParams = new URLSearchParams(useSearchParams());

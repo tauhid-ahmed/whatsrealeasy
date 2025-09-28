@@ -7,7 +7,7 @@ import {
   TableRow,
   TableBodyItem,
 } from "@/features/table/components/Table";
-import TableFallback from "@/features/table/components/TableFallback";
+import { TableSkeleton } from "@/features/table/components/TableSkeleton";
 import fetchTableData from "@/features/table/lib/fetchTableData";
 import sortTableData from "@/features/table/lib/sortTableData";
 import { SortDirection } from "@/features/table/types/table.type";
@@ -42,7 +42,7 @@ export default async function OutboundCallLogs({
     }&_limit=${limit}`
   );
 
-  if (!tableData || !tableData.length) return <TableFallback />;
+  if (!tableData || !tableData.length) return <TableSkeleton />;
 
   const tableHeader = Object.keys(tableData[0]);
   const sorted = sortTableData(
