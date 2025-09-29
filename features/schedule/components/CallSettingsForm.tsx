@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import Selector from "@/components/Selector";
 import { Slider } from "@/components/ui/slider";
 import { useSchedule } from "@/features/schedule/context/ScheduleContext";
+import { Input } from "@/components/ui/input";
 
 export default function ScheduleForm() {
   const { state, dispatch } = useSchedule();
@@ -35,6 +36,13 @@ export default function ScheduleForm() {
     dispatch({
       type: "SET_CALL_END",
       payload: { type: "time", value: time24 },
+    });
+  };
+
+  const handleBatchNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({
+      type: "SET_BATCH_NUMBER",
+      payload: e.target.value,
     });
   };
 
@@ -90,6 +98,17 @@ export default function ScheduleForm() {
           onValueChange={handleGapChange}
         />
         <span className="text-sm text-gray-400">{state.callGap || 5} sec</span>
+      </div>
+      <div className="flex flex-col gap-2">
+        <Label>Total Numbers in Each Batch</Label>
+        <Input
+          defaultValue={state.batchNumber}
+          onChange={handleBatchNumberChange}
+          placeholder="7"
+          max={10}
+          min={1}
+          type="number"
+        />
       </div>
     </div>
   );

@@ -20,6 +20,7 @@ type State = {
   callStartTime: number;
   callEndTime: number;
   callDate: number;
+  batchNumber: number;
   MIN_CALL_DURATION: number;
   MAX_CALL_DURATION: number;
   MIN_CALL_GAP: number;
@@ -38,6 +39,7 @@ type Action =
       payload: { type: "time" | "datetime"; value: string };
     }
   | { type: "SET_CALL_DATE"; payload: { type: "date"; value: string } }
+  | { type: "SET_BATCH_NUMBER"; payload: string }
   | { type: "RESET"; payload: {} };
 
 interface ScheduleContextValue {
@@ -98,6 +100,7 @@ const DEFAULT_STATE: State = {
   callStartTime: 0,
   callEndTime: 0,
   callDate: 0,
+  batchNumber: 7,
   MIN_CALL_DURATION: 150,
   MAX_CALL_DURATION: 600,
   MIN_CALL_GAP: 5,

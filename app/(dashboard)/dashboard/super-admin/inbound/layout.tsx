@@ -25,7 +25,7 @@ export default function SuperAdminInBoundLayout({
             </DashboardSidebar>
           }
         >
-          {children}
+          <div className="py-4">{children}</div>
         </DashboardLayout>
       </SidebarProvider>
     </ScheduleProvider>
