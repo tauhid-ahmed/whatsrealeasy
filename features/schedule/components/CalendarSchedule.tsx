@@ -9,13 +9,15 @@ import CallSettingsForm from "./CallSettingsForm";
 import { useSchedule } from "../context/ScheduleContext";
 
 export default function CalendarSchedule() {
-  const [date, setDate] = useState<Date | undefined>();
-
   const { state, dispatch } = useSchedule();
+  const [date, setDate] = useState<Date | undefined>(new Date(state?.callDate));
 
   useEffect(() => {
     if (date) {
-      dispatch({ type: "SET_CALL_DATE", payload: date });
+      dispatch({
+        type: "SET_CALL_DATE",
+        payload: { type: "date", value: date.toDateString() },
+      });
     }
   }, [date, dispatch]);
 

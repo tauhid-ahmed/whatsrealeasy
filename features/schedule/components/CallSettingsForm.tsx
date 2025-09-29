@@ -6,8 +6,15 @@ import Selector from "@/components/Selector";
 import { Slider } from "@/components/ui/slider";
 import { useSchedule } from "@/features/schedule/context/ScheduleContext";
 
+const MIN_CALL_DURATION = 2.5;
+const MAX_CALL_DURATION = 10;
+const MIN_CALL_GAP = 5;
+const MAX_CALL_GAP = 60;
+
 export default function ScheduleForm() {
   const { state, dispatch } = useSchedule();
+
+  console.log(state);
 
   // Dispatch helpers
   const handleDurationChange = (val: number[]) => {
@@ -43,33 +50,44 @@ export default function ScheduleForm() {
       {/* Start Time */}
       <div className="flex flex-col gap-2">
         <Label>Start Time:</Label>
-        <CallTimePicker onChange={handleStartTimeChange} />
+        <CallTimePicker
+          initialSeconds={state.callStartTime}
+          onChange={handleStartTimeChange}
+        />
       </div>
 
       {/* End Time */}
       <div className="flex flex-col gap-2">
         <Label>End Time:</Label>
-        <CallTimePicker onChange={handleEndTimeChange} />
+        <CallTimePicker
+          initialSeconds={state.callEndTime}
+          onChange={handleEndTimeChange}
+        />
       </div>
 
       {/* Call Duration */}
       <div className="flex flex-col gap-2">
-        <Label>Call Duration (2.5m – 3m)</Label>
+        <Label>
+          Call Duration ({MIN_CALL_DURATION}m – {MAX_CALL_DURATION}m)
+        </Label>
         <Slider
-          min={150}
-          max={180}
-          step={5}
-          value={[state.callDuration || 150]}
+          min={MIN_CALL_DURATION * 60}
+          max={MAX_CALL_DURATION * 60}
+          step={100}
+          value={[state.callDuration]}
           onValueChange={handleDurationChange}
         />
         <span className="text-sm text-gray-400">
-          {((state.callDuration || 150) / 60).toFixed(2)} min
+          {((state.callDuration || MIN_CALL_DURATION * 60) / 60).toFixed(0)} min
+          – {(state.callDuration || MIN_CALL_DURATION * 60).toFixed(0)} sec
         </span>
       </div>
 
       {/* Call Gap */}
       <div className="flex flex-col gap-2">
-        <Label>Call Gap (5s – 15s)</Label>
+        <Label>
+          Call Gap ({MIN_CALL_GAP}s – {MAX_CALL_GAP}s)
+        </Label>
         <Slider
           min={5}
           max={15}
@@ -78,15 +96,6 @@ export default function ScheduleForm() {
           onValueChange={handleGapChange}
         />
         <span className="text-sm text-gray-400">{state.callGap || 5} sec</span>
-      </div>
-
-      {/* Debug Info */}
-      <div className="text-xs text-gray-500 mt-4">
-        <p>Duration: {state.callDuration}s</p>
-        <p>Gap: {state.callGap}s</p>
-        <p>Start: {state.callStartTime}s</p>
-        <p>End: {state.callEndTime}s</p>
-        <p>Date: {state.callDate}s</p>
       </div>
     </div>
   );
@@ -101,10 +110,33 @@ const to24HourFormat = (hour: string, minute: string, ampm: string) => {
   return `${String(h).padStart(2, "0")}:${minute}`;
 };
 
-function CallTimePicker({ onChange }: { onChange?: (time24: string) => void }) {
-  const [hour, setHour] = React.useState("12");
-  const [minute, setMinute] = React.useState("00");
-  const [ampm, setAmPm] = React.useState("AM");
+function CallTimePicker({
+  onChange,
+  initialSeconds, // 👈 pass unix seconds here
+}: {
+  onChange?: (time24: string) => void;
+  initialSeconds?: number;
+}) {
+  // --- derive initial values ---
+  const initialDate = initialSeconds
+    ? new Date(initialSeconds * 1000)
+    : new Date();
+
+  let h = initialDate.getHours();
+  const m = String(initialDate.getMinutes()).padStart(2, "0");
+  const ampmInitial = h >= 12 ? "PM" : "AM";
+  h = h % 12 || 12; // convert to 12h format
+  const hStr = String(h);
+
+  // --- state ---
+  const [hour, setHour] = React.useState(hStr);
+  const [minute, setMinute] = React.useState(m);
+  const [ampm, setAmPm] = React.useState(ampmInitial);
+
+  React.useEffect(() => {
+    // trigger onChange once on mount
+    onChange?.(to24HourFormat(hStr, m, ampmInitial));
+  }, []);
 
   const handleHour = (val: string | ((prevState: string) => string)) => {
     const newHour = typeof val === "function" ? val(hour) : val;

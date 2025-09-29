@@ -99,7 +99,7 @@ const ScheduleContext = createContext<ScheduleContextValue | null>(null);
 
 export default function ScheduleProvider({ children }: ScheduleProviderProps) {
   const [state, dispatch] = useReducer(reducer, DEFAULT_STATE);
-  console.log(state);
+
   return (
     <ScheduleContext.Provider value={{ state, dispatch }}>
       {children}
