@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/context/AuthContext";
-import { logInfo } from "@/lib/logger";
 
 export default function Navbar() {
   const pathname = usePathname();
