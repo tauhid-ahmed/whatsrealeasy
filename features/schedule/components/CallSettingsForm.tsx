@@ -6,15 +6,8 @@ import Selector from "@/components/Selector";
 import { Slider } from "@/components/ui/slider";
 import { useSchedule } from "@/features/schedule/context/ScheduleContext";
 
-const MIN_CALL_DURATION = 2.5;
-const MAX_CALL_DURATION = 10;
-const MIN_CALL_GAP = 5;
-const MAX_CALL_GAP = 60;
-
 export default function ScheduleForm() {
   const { state, dispatch } = useSchedule();
-
-  console.log(state);
 
   // Dispatch helpers
   const handleDurationChange = (val: number[]) => {
@@ -68,25 +61,26 @@ export default function ScheduleForm() {
       {/* Call Duration */}
       <div className="flex flex-col gap-2">
         <Label>
-          Call Duration ({MIN_CALL_DURATION}m – {MAX_CALL_DURATION}m)
+          Call Duration ({state.MIN_CALL_DURATION / 60}m –{" "}
+          {state.MAX_CALL_DURATION / 60}m)
         </Label>
         <Slider
-          min={MIN_CALL_DURATION * 60}
-          max={MAX_CALL_DURATION * 60}
-          step={100}
+          min={state.MIN_CALL_DURATION}
+          max={state.MAX_CALL_DURATION}
+          step={40}
           value={[state.callDuration]}
           onValueChange={handleDurationChange}
         />
         <span className="text-sm text-gray-400">
-          {((state.callDuration || MIN_CALL_DURATION * 60) / 60).toFixed(0)} min
-          – {(state.callDuration || MIN_CALL_DURATION * 60).toFixed(0)} sec
+          {(state.callDuration / 60).toFixed(1)} min – (
+          {((state.callDuration / 60) * 60).toFixed(0)} sec)
         </span>
       </div>
 
       {/* Call Gap */}
       <div className="flex flex-col gap-2">
         <Label>
-          Call Gap ({MIN_CALL_GAP}s – {MAX_CALL_GAP}s)
+          Call Gap ({state.MIN_CALL_GAP}s – {state.MAX_CALL_GAP}s)
         </Label>
         <Slider
           min={5}

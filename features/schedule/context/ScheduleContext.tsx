@@ -20,6 +20,10 @@ type State = {
   callStartTime: number;
   callEndTime: number;
   callDate: number;
+  MIN_CALL_DURATION: number;
+  MAX_CALL_DURATION: number;
+  MIN_CALL_GAP: number;
+  MAX_CALL_GAP: number;
 };
 
 type Action =
@@ -88,11 +92,16 @@ const reducer = (state: State, action: Action): State => {
 };
 
 const DEFAULT_STATE: State = {
-  callDuration: 0,
-  callGap: 0,
+  // Default values are in seconds
+  callDuration: 150,
+  callGap: 10,
   callStartTime: 0,
   callEndTime: 0,
   callDate: 0,
+  MIN_CALL_DURATION: 150,
+  MAX_CALL_DURATION: 600,
+  MIN_CALL_GAP: 5,
+  MAX_CALL_GAP: 15,
 };
 
 const ScheduleContext = createContext<ScheduleContextValue | null>(null);
