@@ -30,12 +30,6 @@ export default function FileUpload() {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Calculate overall progress
-  // const overallProgress =
-  //   files.length > 0
-  //     ? files.reduce((acc, file) => acc + file.progress, 0) / files.length
-  //     : 0;
-
   function handleFileSelect(e: ChangeEvent<HTMLInputElement>) {
     if (!e.target.files?.length) {
       return;
@@ -115,9 +109,18 @@ export default function FileUpload() {
         });
 
         setFiles((prevFiles) =>
-          prevFiles.map((file) =>
-            file.id === fileWithProgress.id ? { ...file, uploaded: true } : file
-          )
+          prevFiles.map((file) => {
+            if (file.id === fileWithProgress.id) {
+              setTimeout(() => {
+                setFiles((prevFiles) =>
+                  prevFiles.filter((file) => file.id !== fileWithProgress.id)
+                );
+              }, 2000);
+            }
+            return file.id === fileWithProgress.id
+              ? { ...file, uploaded: true }
+              : file;
+          })
         );
       } catch (error) {
         console.error(error);
@@ -244,7 +247,7 @@ function ActionButtons({ onUpload, onClear, disabled }: ActionButtonsProps) {
       {/* hidden for now */}
       <Button
         onClick={onClear}
-        className="flexx items-center gap-2 hidden"
+        className="flex items-center gap-2"
         disabled={disabled}
         size="sm"
       >
