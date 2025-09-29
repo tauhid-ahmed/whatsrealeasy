@@ -4,7 +4,7 @@ import Image from "next/image";
 import authBackgroundImage from "@/assets/images/auth-background.svg";
 import { roleBasedPaths } from "@/paths";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/authContext";
 import { useEffect } from "react";
 
 export default function AuthLayout({ children }: React.PropsWithChildren) {

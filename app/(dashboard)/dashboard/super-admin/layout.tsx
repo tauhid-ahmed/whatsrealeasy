@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/authContext";
 import { loginPath } from "@/paths";
 import { redirect } from "next/navigation";
 

@@ -16,7 +16,7 @@ const AuthContext = createContext<AuthContextValue | typeof EMPTY_CONTEXT>(
   EMPTY_CONTEXT
 );
 
-export function AuthProvider({ children, me }: AuthContextProviderProps) {
+ function AuthProvider({ children, me }: AuthContextProviderProps) {
   const [state, setState] = useState<Me | null>(me || null);
 
   useEffect(() => {

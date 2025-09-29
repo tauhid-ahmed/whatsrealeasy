@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import { Toaster } from "sonner";
 import { getMe } from "@/lib/getServerAuth";
-import AuthProvider from "@/context/AuthContext";
 import "@/styles/globals.css";
 import "@/lib/logger";
+import AuthProvider from "@/context/authContext";
 
 const roboto = Roboto({
   variable: "--font-roboto",
