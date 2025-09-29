@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const res = await fetch("http://localhost:5000/api/v1/appointments/auth/initiate");
+    const res = await fetch(`${process.env.API_BASE_URL}/appointments/auth/initiate`);
 
+    console.log("Fetch to backend initiated")
     const data = await res.json();
 
     console.log("Response from backend sdlk", data)
