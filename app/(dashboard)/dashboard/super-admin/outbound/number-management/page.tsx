@@ -1,7 +1,7 @@
 import Button from "@/components/Button";
 import FileUpload from "@/components/FileUpload";
 import { Input } from "@/components/ui/input";
-import Calendar from "@/features/schedule/CalendarSchedule";
+import Calendar from "@/features/schedule/components/CalendarSchedule";
 import { LucideCloudUpload } from "lucide-react";
 
 export default function NumberManagementPage() {

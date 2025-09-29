@@ -19,9 +19,10 @@ export default function CalendarSchedule() {
       }
       side="bottom"
       align="end"
+      className="w-84"
     >
       <Calendar mode="single" selected={date} onSelect={setDate} />
-      <CallSettingsForm onSubmit={() => {}} />
+      <CallSettingsForm />
     </PopoverWrapper>
   );
 }

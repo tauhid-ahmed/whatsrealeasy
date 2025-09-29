@@ -8,7 +8,6 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import * as path from "@/paths";
 import { usePathname, useRouter } from "next/navigation";
@@ -25,9 +24,9 @@ interface SuccessModalProps {
 
 const INBOUND = "dashboard/super-admin/inbound";
 const OUTBOUND = "dashboard/super-admin/outbound";
-const MODAL_DURATION = 1000; // 1 second
+const MODAL_DURATION = 1000;
 
-export default function Modal() {
+export default function CallRouteModeSwitch() {
   const pathname = usePathname();
   const [isModalOpen, setIsModalOpen] = useState(false);
 

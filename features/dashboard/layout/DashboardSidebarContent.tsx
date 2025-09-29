@@ -14,7 +14,7 @@ import {
   AnchorIcon,
 } from "lucide-react";
 import LogoutButton from "@/components/LogoutButton";
-import CallModeSwitch from "@/components/CallModeSwitch";
+import CallModeSwitch from "@/components/CallRouteModeSwitch";
 
 export type SidebarItemType = {
   name: string;
