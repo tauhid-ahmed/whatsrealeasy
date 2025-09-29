@@ -10,6 +10,7 @@ import {
   LucideCloudUpload,
   Plus,
   Trash2,
+  Upload,
   X,
 } from "lucide-react";
 import { ChangeEvent, DragEvent, useRef, useState } from "react";
@@ -29,41 +30,64 @@ type FileWithProgress = {
 };
 
 export type FileUploadProps = {
+  uploadUrl?: string;
   accept?: string;
   maxFileSize?: number;
   maxFiles?: number;
   multiple?: boolean;
-  onFilesChange: (files: File[]) => void;
+  headers?: Record<string, string>;
+  onFilesChange?: (files: File[]) => void;
+  onUploadSuccess?: (data: any) => void;
+  onUploadError?: (error: Error) => void;
   value?: File[];
   name?: string;
   className?: string;
   disabled?: boolean;
+  fileFieldName?: string;
+  showUploadButton?: boolean;
+  autoUpload?: boolean;
 };
 
 // ============================================================================
-// FileUpload Component (UI Only)
+// FileUpload Component
 // ============================================================================
 
 export default function FileUpload({
+  uploadUrl,
   accept,
   maxFileSize = 10 * 1024 * 1024,
   maxFiles = 10,
   multiple = true,
+  headers,
   onFilesChange,
-  value = [],
+  onUploadSuccess,
+  onUploadError,
+  value,
   name = "files",
   className = "",
   disabled = false,
+  fileFieldName = "file",
+  showUploadButton,
+  autoUpload = false,
 }: FileUploadProps) {
+  const [internalFiles, setInternalFiles] = useState<FileWithProgress[]>([]);
+  const [uploading, setUploading] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const currentFiles: FileWithProgress[] = value.map((file, idx) => ({
-    id: `${file.name}-${idx}`,
-    file,
-    progress: 0,
-    uploaded: false,
-  }));
+  // Determine mode
+  const isControlled = value !== undefined;
+  const isStandalone = uploadUrl !== undefined;
+  const shouldShowUpload = showUploadButton ?? isStandalone;
+
+  const currentFiles: FileWithProgress[] = isControlled
+    ? value.map((file, idx) => ({
+        id: `${file.name}-${idx}`,
+        file,
+        progress: 0,
+        uploaded: false,
+      }))
+    : internalFiles;
 
   const validateFile = (file: File): string | null => {
     if (maxFileSize && file.size > maxFileSize) {
@@ -93,16 +117,38 @@ export default function FileUpload({
       return;
     }
 
-    const validFiles = newFiles.filter((file) => {
-      const error = validateFile(file);
-      if (error) {
-        alert(`${file.name}: ${error}`);
-        return false;
-      }
-      return true;
-    });
+    if (isControlled) {
+      const validFiles = newFiles.filter((file) => {
+        const error = validateFile(file);
+        if (error) {
+          alert(`${file.name}: ${error}`);
+          return false;
+        }
+        return true;
+      });
+      onFilesChange?.([...value, ...validFiles]);
+    } else {
+      const validatedFiles: FileWithProgress[] = [];
+      newFiles.forEach((file) => {
+        const error = validateFile(file);
+        validatedFiles.push({
+          id: `${file.name}-${Date.now()}-${Math.random()}`,
+          file,
+          progress: 0,
+          uploaded: false,
+          error: error || undefined,
+        });
+      });
 
-    onFilesChange([...value, ...validFiles]);
+      const updated = [...internalFiles, ...validatedFiles];
+      setInternalFiles(updated);
+      onFilesChange?.(updated.map((f) => f.file));
+
+      // Auto-upload in standalone mode
+      if (autoUpload && isStandalone) {
+        setTimeout(() => uploadFiles(validatedFiles), 100);
+      }
+    }
   };
 
   const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
@@ -131,13 +177,86 @@ export default function FileUpload({
     if (e.dataTransfer.files.length) addFiles(e.dataTransfer.files);
   };
 
+  const uploadFiles = async (filesToUpload?: FileWithProgress[]) => {
+    if (!isStandalone || !uploadUrl) {
+      console.warn("uploadUrl is required for standalone upload");
+      return;
+    }
+
+    const validFiles =
+      filesToUpload || internalFiles.filter((f) => !f.uploaded && !f.error);
+    if (validFiles.length === 0 || uploading) return;
+
+    setUploading(true);
+
+    const formData = new FormData();
+    validFiles.forEach((f) => {
+      formData.append(fileFieldName, f.file);
+    });
+
+    const config: AxiosRequestConfig = {
+      headers: { ...headers },
+      onUploadProgress: (progressEvent) => {
+        const progress = Math.round(
+          ((progressEvent.loaded || 0) * 100) / (progressEvent.total || 1)
+        );
+
+        setInternalFiles((prev) =>
+          prev.map((f) =>
+            validFiles.some((vf) => vf.id === f.id) ? { ...f, progress } : f
+          )
+        );
+      },
+    };
+
+    try {
+      const response = await axios.post(uploadUrl, formData, config);
+
+      setInternalFiles((prev) =>
+        prev.map((f) =>
+          validFiles.some((vf) => vf.id === f.id)
+            ? { ...f, uploaded: true, progress: 100 }
+            : f
+        )
+      );
+
+      onUploadSuccess?.(response.data);
+    } catch (error) {
+      const err = error as Error;
+
+      setInternalFiles((prev) =>
+        prev.map((f) =>
+          validFiles.some((vf) => vf.id === f.id)
+            ? { ...f, error: err.message || "Upload failed" }
+            : f
+        )
+      );
+
+      onUploadError?.(err);
+      logError(error);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const removeFile = (id: string) => {
-    const updated = currentFiles.filter((f) => f.id !== id);
-    onFilesChange(updated.map((f) => f.file));
+    if (isControlled) {
+      const updated = currentFiles.filter((f) => f.id !== id);
+      onFilesChange?.(updated.map((f) => f.file));
+    } else {
+      const updated = internalFiles.filter((f) => f.id !== id);
+      setInternalFiles(updated);
+      onFilesChange?.(updated.map((f) => f.file));
+    }
   };
 
   const clearAll = () => {
-    onFilesChange([]);
+    if (isControlled) {
+      onFilesChange?.([]);
+    } else {
+      setInternalFiles([]);
+      onFilesChange?.([]);
+    }
   };
 
   return (
@@ -172,7 +291,7 @@ export default function FileUpload({
             onChange={handleFileSelect}
             multiple={multiple}
             accept={accept}
-            disabled={disabled}
+            disabled={disabled || uploading}
             className="hidden"
             id="file-upload-input"
           />
@@ -181,31 +300,59 @@ export default function FileUpload({
               type="button"
               onClick={() => inputRef.current?.click()}
               size="sm"
-              disabled={disabled || currentFiles.length >= maxFiles}
+              disabled={
+                disabled || uploading || currentFiles.length >= maxFiles
+              }
             >
               <Plus size={18} />
               Select Files
             </Button>
           </label>
           {currentFiles.length > 0 && (
-            <Button onClick={clearAll} disabled={disabled} size="sm">
-              <Trash2 size={18} />
-              Clear All
-            </Button>
+            <>
+              {shouldShowUpload && isStandalone && !autoUpload && (
+                <Button
+                  onClick={() => uploadFiles()}
+                  disabled={
+                    uploading ||
+                    currentFiles.every((f) => f.uploaded || f.error)
+                  }
+                  size="sm"
+                >
+                  <Upload size={18} />
+                  Upload
+                </Button>
+              )}
+              <Button
+                onClick={clearAll}
+                disabled={disabled || uploading}
+                size="sm"
+              >
+                <Trash2 size={18} />
+                Clear All
+              </Button>
+            </>
           )}
         </div>
       </div>
 
       {currentFiles.length > 0 && (
         <div className="space-y-2">
-          <h3 className="font-semibold">Files ({currentFiles.length})</h3>
+          <h3 className="font-semibold">
+            Files (
+            {isStandalone
+              ? `${currentFiles.filter((f) => f.uploaded).length}/`
+              : ""}
+            {currentFiles.length})
+          </h3>
           <div className="space-y-2">
             {currentFiles.map((file) => (
               <FileItem
                 key={file.id}
                 file={file}
                 onRemove={removeFile}
-                disabled={disabled}
+                disabled={disabled || uploading}
+                showProgress={isStandalone}
               />
             ))}
           </div>
@@ -223,10 +370,12 @@ function FileItem({
   file,
   onRemove,
   disabled,
+  showProgress,
 }: {
   file: FileWithProgress;
   onRemove: (id: string) => void;
   disabled: boolean;
+  showProgress?: boolean;
 }) {
   const Icon = getFileIcon(file.file.type);
 
@@ -256,6 +405,34 @@ function FileItem({
           </button>
         )}
       </div>
+      {showProgress && (
+        <>
+          <div className="flex items-center justify-between text-xs">
+            <span
+              className={
+                file.error
+                  ? "text-rose-500"
+                  : file.uploaded
+                  ? "text-green-500"
+                  : "text-gray-400"
+              }
+            >
+              {file.error ||
+                (file.uploaded ? "Completed" : `${file.progress}%`)}
+            </span>
+          </div>
+          {!file.error && (
+            <div className="h-2 w-full overflow-hidden rounded-full bg-gray-600">
+              <div
+                className={`h-full transition-all duration-300 ease-out ${
+                  file.uploaded ? "bg-green-500" : "bg-blue-500"
+                }`}
+                style={{ width: `${file.progress}%` }}
+              />
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }
@@ -364,3 +541,58 @@ export function useFormUpload({
 
   return { uploadForm, uploading, progress };
 }
+
+/*
+// Upload files immediately on selection
+//1. Standalone Mode (Files only, auto-upload)
+<FileUpload
+  uploadUrl="/api/upload-files"
+  autoUpload={true}
+  onUploadSuccess={(data) => console.log("Uploaded!", data)}
+  onUploadError={(error) => console.error("Error:", error)}
+/>
+
+// Show upload button
+// 2. Standalone Mode (Files only, manual upload)
+<FileUpload
+  uploadUrl="/api/upload-files"
+  onUploadSuccess={(data) => console.log("Uploaded!", data)}
+/>
+
+
+// 3. Controlled Mode (Part of larger form)
+const [formData, setFormData] = useState({
+  title: "",
+  files: [] as File[],
+});
+
+const { uploadForm, uploading, progress } = useFormUpload({
+  url: "/api/upload-all",
+  onSuccess: (data) => console.log("Success!", data),
+});
+
+const handleSubmit = async (e: FormEvent) => {
+  e.preventDefault();
+  await uploadForm(formData);
+};
+
+return (
+  <form onSubmit={handleSubmit}>
+    <input
+      value={formData.title}
+      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+    />
+    
+    <FileUpload
+      value={formData.files}
+      onFilesChange={(files) => setFormData({ ...formData, files })}
+      disabled={uploading}
+    />
+    
+    {uploading && <div>Progress: {progress.percentage}%</div>}
+    
+    <button type="submit" disabled={uploading}>Submit</button>
+  </form>
+);
+
+*/
