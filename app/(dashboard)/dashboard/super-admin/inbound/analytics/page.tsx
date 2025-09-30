@@ -2,6 +2,7 @@ import { getIcon, dashboardStats } from "@/data/analyticsData";
 import { env } from "@/env";
 import AnalyticsChart from "@/features/analytics/Charts";
 import BookingTrendChart from "@/features/chart/components/CallChart";
+import Stats from "@/features/chart/components/Stats";
 import { getAccessToken } from "@/lib/getServerAuth";
 import { safeAsync } from "@/lib/safeAsync";
 import { cn } from "@/lib/utils";
@@ -87,43 +88,9 @@ export default async function AdminAnalyticsPage() {
 
   const data = (result.data?.success && result.data.data) as AnalyticsData;
 
-  console.log(data.monthlyTrends);
-
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {dashboardStats.map((stat, idx) => {
-          const IconComponent = getIcon(stat.icon);
-          return (
-            <div
-              key={idx}
-              className={cn(
-                `px-8 py-14 flex items-center gap-2 rounded-lg ${stat.cardBg}`
-              )}
-            >
-              <div
-                className={cn(
-                  `size-16 rounded-full ${stat.iconBg} flex items-center justify-center`
-                )}
-              >
-                <IconComponent className={cn("size-6", stat.iconColor)} />
-              </div>
-              <div>
-                <h3 className={cn(`text-3xl font-bold ${stat.textColor1}`)}>
-                  {stat.value}
-                </h3>
-                <p
-                  className={cn(
-                    `text-xl ${stat.textColor2} opacity-70 font-medium`
-                  )}
-                >
-                  {stat.title}
-                </p>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      <Stats data={data.analytics} />
       <div className="mt-14">
         <BookingTrendChart data={data.monthlyTrends} />
       </div>
