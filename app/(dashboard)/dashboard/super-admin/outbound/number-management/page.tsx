@@ -48,12 +48,14 @@ function HumanFilesManagement() {
     e.preventDefault();
 
     const getServiceId = await fetch(
-      `${env.NEXT_PUBLIC_API_BASE_URL}/ai-agents`
+      `${env.NEXT_PUBLIC_API_BASE_URL}/ai-agents?callType=outbound`
     );
+
     const getServiceIdResponse: { data: [{ data: { serviceId: string } }] } =
       await getServiceId.json();
+
     const serviceId = getServiceIdResponse.data?.data[0]?.serviceId;
-    console.log(formData.files);
+
     await uploadForm({
       serviceId,
       numberfile: formData.files,

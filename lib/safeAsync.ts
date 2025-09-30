@@ -1,4 +1,3 @@
-import { toast } from "sonner";
 import "@/lib/logger";
 import { logError } from "@/lib/logger";
 
@@ -17,7 +16,7 @@ function handleError(error: unknown, userMessage?: string) {
       ? error
       : "Unexpected error";
 
-  toast.error(userMessage ?? message);
+  logError(message);
 }
 
 export async function safeAsync<T>(

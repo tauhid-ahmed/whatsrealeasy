@@ -5,14 +5,28 @@ type BaseApiResponse = {
   message?: string;
 };
 
-export default async function fetchTableData<T>(url: string): Promise<T[]> {
+export default async function fetchTableData<T>(
+  url: string,
+  options?: {
+    headers?: Record<string, string>;
+    cache?: RequestCache; // keep flexibility
+  }
+): Promise<T[]> {
+  const { headers = {}, cache = "no-cache" } = options ?? {};
+
   const { data, error } = await safeAsync(async () => {
-    const response = await fetch(url, { cache: "no-cache" });
+    const response = await fetch(url, {
+      method: "GET",
+      cache,
+      headers,
+    });
 
     if (!response.ok) {
       throw new Error(response.statusText);
     }
+
     const json: unknown = await response.json();
+
     if (
       typeof json === "object" &&
       json !== null &&

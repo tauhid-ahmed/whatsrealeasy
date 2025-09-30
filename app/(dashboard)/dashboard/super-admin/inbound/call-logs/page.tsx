@@ -1,4 +1,6 @@
+import { env } from "@/env";
 import Pagination from "@/features/table/components/Pagination";
+import SearchField from "@/features/table/components/SearchField";
 import {
   Table,
   TableBody,
@@ -14,71 +16,192 @@ import {
   DEFAULT_ITEMS_PER_PAGE,
   DEFAULT_PAGE,
 } from "@/features/table/utils/constant";
+import { getAccessToken } from "@/lib/getServerAuth";
 
-type TableData = {
-  userId: string;
+// -------------------- API response types --------------------
+type Service = {
+  serviceName: string;
+};
+
+type CallType = "outgoing" | "inbound";
+type CallStatus = "completed" | "initiated" | "failed" | "busy" | "no-answer";
+
+type CallLogApiRow = {
   id: string;
-  title: string;
-  completed: boolean;
+  call_sid: string;
+  agent_id: string;
+  call_recording: string | null;
+  from_number: string;
+  to_number: string;
+  callType: CallType;
+  call_status: CallStatus;
+  call_time: string;
+  call_transcript: string | null;
+  name: string | null;
+  contact_number: string | null;
+  company: string | null;
+  area: string | null;
+  description: string | null;
+  createdAt: string;
+  updatedAt: string;
+  service: Service;
+  bookings: null;
+};
+
+type ApiMeta = {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+};
+
+type CallLogsApiResponse = {
+  success: boolean;
+  message: string;
+  data: {
+    meta: ApiMeta;
+    data: CallLogApiRow[];
+  };
+};
+
+// -------------------- Table row type --------------------
+type CallLogRow = {
+  id: string;
+  from_number: string;
+  to_number: string;
+  callType: CallType;
+  call_status: CallStatus;
+  call_time: string;
+  company: string | null;
+};
+
+type TableHeader = {
+  key: keyof CallLogRow;
+  label: string;
+};
+
+type SearchParams = {
+  page?: string;
+  limit?: string;
+  sort?: string;
+  q?: string;
 };
 
 type InboundCallLogsProps = {
-  searchParams: Promise<{ page: string; limit: string; sort: string }>;
+  searchParams: Promise<SearchParams>;
 };
 
+// -------------------- Helper Functions --------------------
+function parseSearchParams(params: SearchParams): {
+  page: number;
+  limit: number;
+  sortField: string;
+  sortDirection: SortDirection;
+  q?: string;
+} {
+  const page = Number(params.page) || DEFAULT_PAGE;
+  const limit = Number(params.limit) || DEFAULT_ITEMS_PER_PAGE;
+  const [sortField = "", sortDirection = ""] = (params.sort || "").split(":");
+
+  return {
+    page,
+    limit,
+    sortField,
+    sortDirection: sortDirection as SortDirection,
+  };
+}
+
+function normalizeCallLogData(rows: CallLogApiRow[]): CallLogRow[] {
+  return rows.map((row) => ({
+    id: row.id,
+    from_number: row.from_number,
+    to_number: row.to_number,
+    callType: row.callType,
+    call_status: row.call_status,
+    call_time: new Date(row.call_time).toLocaleString(),
+    company: row.company,
+  }));
+}
+
+// -------------------- Component --------------------
 export default async function InboundCallLogs({
   searchParams,
 }: InboundCallLogsProps) {
+  const token = await getAccessToken();
   const queryParams = await searchParams;
 
-  const page = Number(queryParams.page) || DEFAULT_PAGE;
-  const limit = Number(queryParams.limit) || DEFAULT_ITEMS_PER_PAGE;
-  const [sortField, sortDirection = ""] = (queryParams.sort || "").split(":");
+  const { page, limit, sortField, sortDirection, q } =
+    parseSearchParams(queryParams);
 
-  const tableData: TableData[] = await fetchTableData(
-    `https://jsonplaceholder.typicode.com/todos?_start=${
-      (page - 1) * limit
-    }&_limit=${limit}`
+  // Fetch typed data
+  const response = await fetchTableData<CallLogsApiResponse>(
+    `${
+      env.API_BASE_URL
+    }/call-logs?callType=incoming&page=${page}&limit=${limit} ${
+      q ? `&q=${q}` : ""
+    }`,
+    {
+      headers: { Authorization: token || "" },
+    }
   );
 
-  if (!tableData || !tableData.length) return <TableFallback />;
+  // Handle array response from fetchTableData
+  const apiResponse = Array.isArray(response) ? response[0] : response;
 
-  const tableHeader = Object.keys(tableData[0]);
-  const sorted = sortTableData(
-    tableData,
-    sortField as keyof TableData,
-    sortDirection as SortDirection
+  const tableDataRaw: CallLogApiRow[] = apiResponse.data.data;
+  const meta: ApiMeta = apiResponse.data.meta;
+
+  // Normalize data
+  const normalizedData: CallLogRow[] = normalizeCallLogData(tableDataRaw);
+
+  // Table headers with explicit typing
+  const tableHeader: readonly TableHeader[] = [
+    { key: "from_number", label: "From" },
+    { key: "to_number", label: "To" },
+    { key: "callType", label: "Type" },
+    { key: "call_status", label: "Status" },
+    { key: "call_time", label: "Time" },
+    { key: "company", label: "Company" },
+  ] as const;
+
+  // Apply sorting with type assertion
+  const sorted: CallLogRow[] = sortTableData(
+    normalizedData,
+    sortField as keyof CallLogRow,
+    sortDirection
   );
-  const totalItems = 200; // static from API docs
-  const totalPages = Math.ceil(totalItems / limit);
+
+  // Pagination values
+  const totalPages: number = meta.totalPages;
 
   return (
     <div className="space-y-6">
+      <SearchField initialValue={queryParams.q} />
       <Table>
         <TableHeader>
           <TableRow>
-            {tableHeader.map((prop) => (
+            {tableHeader.map(({ key }) => (
               <TableHeaderItem
-                key={prop}
-                prop={prop}
+                key={key}
+                prop={key}
                 currentSort={sortField}
-                sortDirection={sortDirection as SortDirection}
+                sortDirection={sortDirection}
               />
             ))}
           </TableRow>
         </TableHeader>
+
         <TableBody>
-          {sorted.map((item, rowIndex) => (
-            <TableRow key={rowIndex}>
-              {tableHeader.map((prop) => (
-                <TableBodyItem key={prop}>
-                  {String(item[prop as keyof TableData])}
-                </TableBodyItem>
+          {sorted.map((item: CallLogRow) => (
+            <TableRow key={item.id}>
+              {tableHeader.map(({ key }) => (
+                <TableBodyItem key={key}>{item[key] ?? "N/A"}</TableBodyItem>
               ))}
             </TableRow>
           ))}
         </TableBody>
       </Table>
+
       <Pagination totalPages={totalPages} currentPage={page} pageSize={limit} />
     </div>
   );
