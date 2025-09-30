@@ -148,8 +148,6 @@ export default async function InboundCallLogs({
   // Handle array response from fetchTableData
   const apiResponse = Array.isArray(response) ? response[0] : response;
 
-  console.log("API Response:", apiResponse);
-
   const tableDataRaw: CallLogApiRow[] = apiResponse.data.data;
   const meta: ApiMeta = apiResponse.data.meta;
 

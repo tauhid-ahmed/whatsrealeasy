@@ -165,11 +165,7 @@ function AIFilesManagement() {
       }
     );
 
-    console.log({ updateAgent });
-
     const updateAgentResponse = await updateAgent.json();
-
-    console.log({ updateAgentResponse });
 
     if (updateAgentResponse.success) {
       toast.success("Successful");

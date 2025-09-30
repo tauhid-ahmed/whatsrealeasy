@@ -207,7 +207,6 @@ export default async function InboundCallLogs({
 
         <TableBody>
           {sorted.map((item: AgentTableRow) => {
-            console.log(item);
             return (
               <TableRow key={item.id}>
                 {tableHeader.map(({ key }) => (

@@ -22,7 +22,6 @@ export function AuthProvider({ children, me }: AuthContextProviderProps) {
   useEffect(() => {
     if (me !== state) {
       setState(me);
-      console.log("me", me);
     }
   }, [me, state]);
 

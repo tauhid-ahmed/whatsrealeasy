@@ -51,10 +51,12 @@ export default function CreateInboundAgent() {
         const serviceCreateResponse: { db_record: { _id: string } } =
           await serviceCreate.json();
 
-        await uploadForm({
-          serviceId: serviceCreateResponse.db_record._id,
-          file: formData.files,
-        });
+        if (formData.files.length > 0) {
+          await uploadForm({
+            serviceId: serviceCreateResponse.db_record._id,
+            file: formData.files,
+          });
+        }
 
         const agentData = {
           params: {
@@ -73,7 +75,7 @@ export default function CreateInboundAgent() {
           },
         };
 
-        const createAgent = await fetch(
+        const updateAgent = await fetch(
           `${env.NEXT_PUBLIC_API_BASE_URL_AI_INBOUND}/services/create-agent/?service_id=${agentData.params.service_id}&call_type=${agentData.params.call_type}`,
           {
             method: "POST",
@@ -84,9 +86,9 @@ export default function CreateInboundAgent() {
           }
         );
 
-        const createAgentResponse = await createAgent.json();
+        const updateAgentResponse = await updateAgent.json();
 
-        if (createAgentResponse.status === "success") {
+        if (updateAgentResponse.status === "success") {
           toast.success("Agent updated successfully");
         } else {
           toast.error("Failed to update agent");
