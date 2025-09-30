@@ -14,8 +14,9 @@ export default function CreateInboundAgent() {
   const searchParams = useSearchParams();
 
   const [formData, setFormData] = useState({
-    serviceName: "",
-    phoneNumber: "",
+    serviceName: searchParams.get("service") || "",
+    phoneNumber: searchParams.get("phone") || "",
+    firstMessage: searchParams.get("message") || "",
     files: [] as File[],
   });
 
@@ -94,6 +95,7 @@ export default function CreateInboundAgent() {
                 name="serviceName"
                 type="text"
                 placeholder="Service name"
+                value={formData.serviceName}
                 onChange={handleFormdataChange}
               />
             </Label>
@@ -102,6 +104,7 @@ export default function CreateInboundAgent() {
                 name="phoneNumber"
                 type="text"
                 placeholder="Phone number"
+                value={formData.phoneNumber}
                 onChange={handleFormdataChange}
               />
             </Label>
@@ -110,6 +113,7 @@ export default function CreateInboundAgent() {
           <Textarea
             name="greetingMessage"
             placeholder="Write a greeting message"
+            value={formData.firstMessage}
             onChange={handleFormdataChange}
           />
 
