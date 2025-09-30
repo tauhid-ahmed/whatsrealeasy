@@ -85,6 +85,12 @@ const reducer = (state: State, action: Action): State => {
         callDate: normalizeToSeconds("date", action.payload.value),
       };
 
+    case "SET_BATCH_NUMBER":
+      return {
+        ...state,
+        batchNumber: Number(action.payload),
+      };
+
     case "RESET":
       return DEFAULT_STATE;
 

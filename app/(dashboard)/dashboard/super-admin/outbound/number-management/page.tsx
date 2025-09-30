@@ -8,6 +8,7 @@ import Calendar from "@/features/schedule/components/CalendarSchedule";
 import { useSchedule } from "@/features/schedule/context/ScheduleContext";
 import { LucideCloudUpload } from "lucide-react";
 import { FormEvent, useState } from "react";
+import { toast } from "sonner";
 
 interface ServiceIdResponse {
   data?: {
@@ -32,22 +33,8 @@ function HumanFilesManagement() {
     files: [] as File[],
   });
 
-  const sendFormData = {
-    params: {
-      starting_time: state.callStartTime,
-      call_duration: state.callDuration,
-      call_gap: state.callGap,
-      total_numbers_in_each_batch: state.batchNumber,
-    },
-    body: {
-      numberfile: "",
-      serviceId: "",
-    },
-  };
-
   const { uploadForm, uploading, progress } = useFormUpload({
     url: `${env.NEXT_PUBLIC_API_BASE_URL_AI_OUTBOUND}/outbound/start-batch-call?starting_time=${state.callStartTime}&call_duration=${state.callDuration}&call_gap=${state.callGap}&total_numbers_in_each_batch=${state.batchNumber}`,
-    onSuccess: (data) => console.log("Success!", data),
   });
 
   const handleSubmit = async (e: FormEvent) => {
@@ -87,8 +74,9 @@ function HumanFilesManagement() {
           <FileUpload
             onFilesChange={(files) => setFormData({ ...formData, files })}
             disabled={uploading}
-            onUploadSuccess={(data) => console.log("Uploaded!", data)}
-            onUploadError={(error) => console.error("Error:", error)}
+            onUploadSuccess={() => toast.success("File uploaded successfully!")}
+            onUploadError={(error) => toast.error(error.message)}
+            accept="text/csv"
           />
 
           <div className="flex justify-center">
@@ -105,7 +93,6 @@ function HumanFilesManagement() {
 function AIFilesManagement() {
   const { uploadForm, uploading, progress } = useFormUpload({
     url: `${env.NEXT_PUBLIC_API_BASE_URL_AI_INBOUND}/service-knowledge/knowledge-base/file`,
-    onSuccess: (data) => console.log("Success!", data),
   });
 
   const [formData, setFormData] = useState({
@@ -170,8 +157,9 @@ function AIFilesManagement() {
         <FileUpload
           onFilesChange={(files) => setFormData({ ...formData, files })}
           disabled={uploading}
-          onUploadSuccess={(data) => console.log("Uploaded!", data)}
-          onUploadError={(error) => console.error("Error:", error)}
+          onUploadSuccess={() => toast.success("File uploaded successfully!")}
+          onUploadError={(error) => toast.error(error.message)}
+          accept=".txt,text/plain"
         />
         <div className="flex justify-center mt-4">
           <Button size="sm">Upload</Button>
