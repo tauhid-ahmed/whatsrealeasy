@@ -1,5 +1,6 @@
 import "@/lib/logger";
 import { logError } from "@/lib/logger";
+import { toast } from "sonner";
 
 export type SafeResult<T> = {
   data: T | null;
@@ -21,13 +22,16 @@ function handleError(error: unknown, userMessage?: string) {
 
 export async function safeAsync<T>(
   fn: () => Promise<T>,
-  options?: { fallback?: T; message?: string }
+  options?: { client: boolean; fallback?: T; message?: string }
 ): Promise<SafeResult<T>> {
   try {
     const data = await fn();
     return { data, error: null };
   } catch (error) {
     handleError(error, options?.message);
+    if (options?.client) {
+      toast.error(error instanceof Error ? error.message : String(error));
+    }
     return {
       data: options?.fallback ?? null,
       error: error instanceof Error ? error : new Error(String(error)),

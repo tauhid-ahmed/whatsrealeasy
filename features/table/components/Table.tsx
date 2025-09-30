@@ -74,7 +74,7 @@ export function TableHeaderItem({
           { "text-white": isActive }
         )}
       >
-        {prop}
+        {formatHeaderLabel(prop)}
         <span
           className={cn(
             "text-gray-100 translate-y-px transition transition-200 group-hover:opacity-100 rounded size-4 flex items-center justify-center",
@@ -113,4 +113,13 @@ export function TableRow({ children, className }: React.ComponentProps<"tr">) {
 
 export function TableBodyItem({ children }: React.ComponentProps<"td">) {
   return <td className="px-2 py-1.5">{children}</td>;
+}
+
+function formatHeaderLabel(key: string): string {
+  return key
+    .replace(/[-_]/g, " ") // convert kebab/snake → space
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2") // split camelCase
+    .replace(/\s+/g, " ") // collapse extra spaces
+    .trim()
+    .replace(/\b\w/g, (c) => c.toUpperCase()); // capitalize words
 }

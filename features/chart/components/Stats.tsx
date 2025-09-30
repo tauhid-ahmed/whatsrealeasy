@@ -76,7 +76,7 @@ export default function Stats({ data }: StatsProps) {
     },
     {
       title: "Booking Success Ratio",
-      value: `${data.calls.successRate}%`,
+      value: `${data.calls.successRate.toFixed(2)}%`,
       icon: "calendarCheck",
       iconColor: "text-[#56FF6F]",
       iconBg: "bg-[#34A853]",

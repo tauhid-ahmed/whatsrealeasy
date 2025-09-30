@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { env } from "@/env";
 import Calendar from "@/features/schedule/components/CalendarSchedule";
 import { useSchedule } from "@/features/schedule/context/ScheduleContext";
+import { safeAsync } from "@/lib/safeAsync";
 import { LucideCloudUpload } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
@@ -22,7 +23,7 @@ export default function NumberManagementPage() {
     <div className="space-y-10">
       <HumanFilesManagement />
       <AIFilesManagement />
-      <DirectCallManagement />
+      {/* <DirectCallManagement /> */}
     </div>
   );
 }
@@ -35,13 +36,13 @@ function HumanFilesManagement() {
     files: [] as File[],
   });
 
-  const { uploadForm, uploading, progress } = useFormUpload({
+  const { uploadForm, uploading } = useFormUpload({
     url: `${env.NEXT_PUBLIC_API_BASE_URL_AI_OUTBOUND}/outbound/start-batch-call?starting_time=${state.callStartTime}&call_duration=${state.callDuration}&call_gap=${state.callGap}&total_numbers_in_each_batch=${state.batchNumber}`,
   });
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
+    toast.success("Uploading...");
     const getServiceId = await fetch(
       `${env.NEXT_PUBLIC_API_BASE_URL}/ai-agents?callType=outbound`,
       {
@@ -54,12 +55,17 @@ function HumanFilesManagement() {
     );
 
     const getServiceIdResponse: ServiceIdResponse = await getServiceId.json();
+
     const serviceId = getServiceIdResponse.data?.data?.[0]?.serviceId ?? null;
 
-    await uploadForm({
+    const response = await uploadForm({
       serviceId,
       numberfile: formData.files,
     });
+
+    if (response.success) {
+      toast.success("Successful");
+    }
   };
 
   return (
@@ -101,7 +107,7 @@ function HumanFilesManagement() {
 
 function AIFilesManagement() {
   const auth = useAuth();
-  const { uploadForm, uploading, progress } = useFormUpload({
+  const { uploadForm, uploading } = useFormUpload({
     url: `${env.NEXT_PUBLIC_API_BASE_URL_AI_INBOUND}/service-knowledge/knowledge-base/file`,
   });
 
@@ -127,12 +133,17 @@ function AIFilesManagement() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    toast.success("Uploading...");
     const serviceId = await handleServiceId();
 
-    await uploadForm({
-      serviceId: serviceId,
-      file: formData.files,
-    });
+    try {
+      await uploadForm({
+        serviceId: serviceId,
+        file: formData.files,
+      });
+    } catch {
+      toast.error("Something went wrong");
+    }
 
     const updateAgent = await fetch(
       `${env.NEXT_PUBLIC_API_BASE_URL_AI_INBOUND}/services/create-agent/?service_id=${serviceId}&call_type=outbound`,
@@ -154,8 +165,15 @@ function AIFilesManagement() {
       }
     );
 
+    console.log({ updateAgent });
+
     const updateAgentResponse = await updateAgent.json();
+
     console.log({ updateAgentResponse });
+
+    if (updateAgentResponse.success) {
+      toast.success("Successful");
+    }
   };
 
   return (
@@ -185,16 +203,16 @@ function AIFilesManagement() {
   );
 }
 
-function DirectCallManagement() {
-  return (
-    <div className="w-fit mx-auto">
-      <span className="text-lg mb-2">Write a single number</span>
-      <Input className="w-72" placeholder="(270) 555-0117" />
-      <Button className="mt-4 w-full" size="sm">
-        Call Now
-      </Button>
-    </div>
-  );
-}
+// function DirectCallManagement() {
+//   return (
+//     <div className="w-fit mx-auto">
+//       <span className="text-lg mb-2">Write a single number</span>
+//       <Input className="w-72" placeholder="(270) 555-0117" />
+//       <Button className="mt-4 w-full" size="sm">
+//         Call Now
+//       </Button>
+//     </div>
+//   );
+// }
 
-function UploadProgress() {}
+// function UploadProgress() {}

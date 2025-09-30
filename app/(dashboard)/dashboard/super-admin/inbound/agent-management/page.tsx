@@ -154,9 +154,6 @@ export default async function InboundCallLogs({
   const apiResponse = Array.isArray(response) ? response[0] : response;
 
   // Type guard for response validation
-  if (!apiResponse?.data?.data?.length) {
-    return <div>No data found</div>;
-  }
 
   const tableDataRaw: AgentApiRow[] = apiResponse.data.data;
   const meta: ApiMeta = apiResponse.data.meta;
@@ -204,7 +201,7 @@ export default async function InboundCallLogs({
                 sortDirection={sortDirection}
               />
             ))}
-            <th>Action</th>
+            <th className="">Action</th>
           </TableRow>
         </TableHeader>
 
@@ -217,13 +214,23 @@ export default async function InboundCallLogs({
                   <TableBodyItem key={key}>{item[key] ?? "N/A"}</TableBodyItem>
                 ))}
                 <td>
-                  <Button size="sm" asChild variant="ghost">
-                    <Link
-                      href={`/dashboard/super-admin/inbound/agent-management/${item.id}?service=${item.serviceName}&phone=${item.phoneNumber}&message=${item?.first_message}`}
-                    >
-                      <SquarePen />
-                    </Link>
-                  </Button>
+                  <div className="flex justify-center">
+                    <Button size="sm" asChild variant="ghost">
+                      <Link
+                        href={`/dashboard/super-admin/inbound/agent-management/${
+                          item.id
+                        }?service=${encodeURIComponent(
+                          item.serviceName
+                        )}&phone=${encodeURIComponent(
+                          item.phoneNumber
+                        )}&message=${encodeURIComponent(
+                          item.first_message ?? ""
+                        )}`}
+                      >
+                        <SquarePen />
+                      </Link>
+                    </Button>
+                  </div>
                 </td>
               </TableRow>
             );

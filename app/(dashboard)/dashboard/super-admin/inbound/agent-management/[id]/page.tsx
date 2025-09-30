@@ -9,14 +9,15 @@ import Button from "@/components/Button";
 import { safeAsync } from "@/lib/safeAsync";
 import { env } from "@/env";
 import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 
 export default function CreateInboundAgent() {
   const searchParams = useSearchParams();
 
   const [formData, setFormData] = useState({
-    serviceName: searchParams.get("service") || "",
-    phoneNumber: searchParams.get("phone") || "",
-    firstMessage: searchParams.get("message") || "",
+    serviceName: decodeURIComponent(searchParams.get("service") || ""),
+    phoneNumber: decodeURIComponent(searchParams.get("phone") || ""),
+    firstMessage: decodeURIComponent(searchParams.get("message") || ""),
     files: [] as File[],
   });
 
@@ -26,7 +27,7 @@ export default function CreateInboundAgent() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const { uploadForm, uploading, progress } = useFormUpload({
+  const { uploadForm, uploading } = useFormUpload({
     url: `${env.NEXT_PUBLIC_API_BASE_URL_AI_INBOUND}/service-knowledge/knowledge-base/file`,
     onSuccess: (data) => console.log("Success!", data),
     onError: (error) => console.error("Error!", error),
@@ -34,56 +35,65 @@ export default function CreateInboundAgent() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await safeAsync(async () => {
-      const serviceCreate = await fetch(
-        `${env.NEXT_PUBLIC_API_BASE_URL_AI_INBOUND}/services/create-service/?serviceName=${formData.serviceName}&phoneNumber=${formData.phoneNumber}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+    await safeAsync(
+      async () => {
+        toast.success("Updating agent...");
+        const serviceCreate = await fetch(
+          `${env.NEXT_PUBLIC_API_BASE_URL_AI_INBOUND}/services/create-service/?serviceName=${formData.serviceName}&phoneNumber=${formData.phoneNumber}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const serviceCreateResponse: { db_record: { _id: string } } =
+          await serviceCreate.json();
+
+        await uploadForm({
+          serviceId: serviceCreateResponse.db_record._id,
+          file: formData.files,
+        });
+
+        const agentData = {
+          params: {
+            service_id: serviceCreateResponse.db_record._id,
+            call_type: "inbound",
           },
-        }
-      );
-
-      const serviceCreateResponse: { db_record: { _id: string } } =
-        await serviceCreate.json();
-
-      await uploadForm({
-        serviceId: serviceCreateResponse.db_record._id,
-        file: formData.files,
-      });
-
-      const agentData = {
-        params: {
-          service_id: serviceCreateResponse.db_record._id,
-          call_type: "inbound",
-        },
-        body: {
-          max_duration_seconds: 300,
-          stability: 0.9,
-          speed: 0.9,
-          similarity_boost: 0.7,
-          llm: "gemini-2.0-flash-lite",
-          temperature: 0.9,
-          daily_limit: 1000,
-        },
-      };
-
-      const createAgent = await fetch(
-        `${env.NEXT_PUBLIC_API_BASE_URL_AI_INBOUND}/services/create-agent/?service_id=${agentData.params.service_id}&call_type=${agentData.params.call_type}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+          body: {
+            first_message: formData.firstMessage,
+            max_duration_seconds: 300,
+            stability: 0.9,
+            speed: 0.9,
+            similarity_boost: 0.7,
+            llm: "gemini-2.0-flash-lite",
+            temperature: 0.9,
+            daily_limit: 1000,
           },
-          body: JSON.stringify(agentData.body),
+        };
+
+        const createAgent = await fetch(
+          `${env.NEXT_PUBLIC_API_BASE_URL_AI_INBOUND}/services/create-agent/?service_id=${agentData.params.service_id}&call_type=${agentData.params.call_type}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(agentData.body),
+          }
+        );
+
+        const createAgentResponse = await createAgent.json();
+
+        if (createAgentResponse.status === "success") {
+          toast.success("Agent updated successfully");
+        } else {
+          toast.error("Failed to update agent");
         }
-      );
-
-      const createAgentResponse = await createAgent.json();
-
-      console.log({ createAgentResponse });
-    });
+      },
+      { client: true }
+    );
   };
   return (
     <div>
@@ -116,16 +126,19 @@ export default function CreateInboundAgent() {
             value={formData.firstMessage}
             onChange={handleFormdataChange}
           />
-
-          <FileUpload
-            onFilesChange={(files) => setFormData({ ...formData, files })}
-            disabled={uploading}
-            onUploadSuccess={(data) => console.log("Uploaded!", data)}
-            onUploadError={(error) => console.error("Error:", error)}
-          />
+          <div className="space-y-2">
+            <h2 className="text-sm">AI Guide Document</h2>
+            <FileUpload
+              onFilesChange={(files) => setFormData({ ...formData, files })}
+              disabled={uploading}
+              onUploadSuccess={(data) => console.log("Uploaded!", data)}
+              onUploadError={(error) => console.error("Error:", error)}
+              accept=".txt,text/plain"
+            />
+          </div>
         </div>
         <div className="flex justify-center mt-10">
-          <Button size="sm">Create Agent</Button>
+          <Button size="sm">Update Agent</Button>
         </div>
       </form>
     </div>
