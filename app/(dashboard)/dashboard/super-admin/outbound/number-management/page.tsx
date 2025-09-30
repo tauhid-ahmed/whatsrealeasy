@@ -7,7 +7,13 @@ import { env } from "@/env";
 import Calendar from "@/features/schedule/components/CalendarSchedule";
 import { useSchedule } from "@/features/schedule/context/ScheduleContext";
 import { LucideCloudUpload } from "lucide-react";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
+
+interface ServiceIdResponse {
+  data?: {
+    data?: { serviceId: string }[];
+  };
+}
 
 export default function NumberManagementPage() {
   return (
@@ -51,10 +57,8 @@ function HumanFilesManagement() {
       `${env.NEXT_PUBLIC_API_BASE_URL}/ai-agents?callType=outbound`
     );
 
-    const getServiceIdResponse: { data: [{ data: { serviceId: string } }] } =
-      await getServiceId.json();
-
-    const serviceId = getServiceIdResponse.data?.data[0]?.serviceId;
+    const getServiceIdResponse: ServiceIdResponse = await getServiceId.json();
+    const serviceId = getServiceIdResponse.data?.data?.[0]?.serviceId ?? null;
 
     await uploadForm({
       serviceId,
@@ -112,9 +116,8 @@ function AIFilesManagement() {
     const getServiceId = await fetch(
       `${env.NEXT_PUBLIC_API_BASE_URL}/ai-agents`
     );
-    const getServiceIdResponse: { data: [{ data: { serviceId: string } }] } =
-      await getServiceId.json();
-    const serviceId = getServiceIdResponse.data?.data[0]?.serviceId;
+    const getServiceIdResponse: ServiceIdResponse = await getServiceId.json();
+    const serviceId = getServiceIdResponse.data?.data?.[0]?.serviceId ?? null;
     return serviceId;
   };
 

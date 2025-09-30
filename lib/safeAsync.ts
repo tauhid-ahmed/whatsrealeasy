@@ -16,7 +16,7 @@ function handleError(error: unknown, userMessage?: string) {
       ? error
       : "Unexpected error";
 
-  logError(message);
+  logError(message, userMessage);
 }
 
 export async function safeAsync<T>(

@@ -37,7 +37,7 @@ export type FileUploadProps = {
   multiple?: boolean;
   headers?: Record<string, string>;
   onFilesChange?: (files: File[]) => void;
-  onUploadSuccess?: (data: any) => void;
+  onUploadSuccess?: (data: File) => void;
   onUploadError?: (error: Error) => void;
   value?: File[];
   name?: string;
@@ -472,7 +472,7 @@ type UseFormUploadOptions = {
   url: string;
   headers?: Record<string, string>;
   onProgress?: (progress: UploadProgress) => void;
-  onSuccess?: (data: any) => void;
+  onSuccess?: (data: File) => void;
   onError?: (error: Error) => void;
 };
 
@@ -490,7 +490,7 @@ export function useFormUpload({
     percentage: 0,
   });
 
-  const uploadForm = async (formData: Record<string, any>) => {
+  const uploadForm = async (formData: Record<string, unknown>) => {
     setUploading(true);
     setProgress({ loaded: 0, total: 0, percentage: 0 });
 
