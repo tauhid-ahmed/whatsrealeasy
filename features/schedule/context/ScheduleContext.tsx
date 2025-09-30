@@ -5,6 +5,7 @@ import {
   createContext,
   useContext,
   useReducer,
+  useEffect,
   type ReactNode,
   type Dispatch,
 } from "react";
@@ -15,12 +16,12 @@ interface ScheduleProviderProps {
 }
 
 type State = {
-  callDuration: number;
-  callGap: number;
-  callStartTime: number;
-  callEndTime: number;
-  callDate: number;
-  batchNumber: number;
+  callDuration: number; // in seconds
+  callGap: number; // in seconds
+  callStartTime: number; // timestamp in seconds
+  callEndTime: number; // timestamp in seconds
+  callDate: number; // timestamp in seconds
+  batchNumber: number; // number of simultaneous calls per batch
   MIN_CALL_DURATION: number;
   MAX_CALL_DURATION: number;
   MIN_CALL_GAP: number;
@@ -45,62 +46,12 @@ type Action =
 interface ScheduleContextValue {
   state: State;
   dispatch: Dispatch<Action>;
+  calculateTotalCalls: () => number;
 }
 
-const reducer = (state: State, action: Action): State => {
-  switch (action.type) {
-    case "SET_CALL_DURATION":
-      return {
-        ...state,
-        callDuration: normalizeToSeconds("duration", action.payload.value),
-      };
-
-    case "SET_CALL_GAP":
-      return {
-        ...state,
-        callGap: normalizeToSeconds("duration", action.payload.value),
-      };
-
-    case "SET_CALL_START":
-      return {
-        ...state,
-        callStartTime: normalizeToSeconds(
-          action.payload.type,
-          action.payload.value
-        ),
-      };
-
-    case "SET_CALL_END":
-      return {
-        ...state,
-        callEndTime: normalizeToSeconds(
-          action.payload.type,
-          action.payload.value
-        ),
-      };
-
-    case "SET_CALL_DATE":
-      return {
-        ...state,
-        callDate: normalizeToSeconds("date", action.payload.value),
-      };
-
-    case "SET_BATCH_NUMBER":
-      return {
-        ...state,
-        batchNumber: Number(action.payload),
-      };
-
-    case "RESET":
-      return DEFAULT_STATE;
-
-    default:
-      return state;
-  }
-};
+const LOCAL_STORAGE_KEY = "scheduleState";
 
 const DEFAULT_STATE: State = {
-  // Default values are in seconds
   callDuration: 150,
   callGap: 10,
   callStartTime: 0,
@@ -113,13 +64,86 @@ const DEFAULT_STATE: State = {
   MAX_CALL_GAP: 15,
 };
 
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case "SET_CALL_DURATION":
+      return {
+        ...state,
+        callDuration: normalizeToSeconds("duration", action.payload.value),
+      };
+    case "SET_CALL_GAP":
+      return {
+        ...state,
+        callGap: normalizeToSeconds("duration", action.payload.value),
+      };
+    case "SET_CALL_START":
+      return {
+        ...state,
+        callStartTime: normalizeToSeconds(
+          action.payload.type,
+          action.payload.value
+        ),
+      };
+    case "SET_CALL_END":
+      return {
+        ...state,
+        callEndTime: normalizeToSeconds(
+          action.payload.type,
+          action.payload.value
+        ),
+      };
+    case "SET_CALL_DATE":
+      return {
+        ...state,
+        callDate: normalizeToSeconds("date", action.payload.value),
+      };
+    case "SET_BATCH_NUMBER":
+      return { ...state, batchNumber: Number(action.payload) };
+    case "RESET":
+      return DEFAULT_STATE;
+    default:
+      return state;
+  }
+};
+
 const ScheduleContext = createContext<ScheduleContextValue | null>(null);
 
 export default function ScheduleProvider({ children }: ScheduleProviderProps) {
-  const [state, dispatch] = useReducer(reducer, DEFAULT_STATE);
+  const [state, dispatch] = useReducer(reducer, DEFAULT_STATE, (initial) => {
+    if (typeof window === "undefined") return initial;
+    try {
+      const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+      return stored ? JSON.parse(stored) : initial;
+    } catch {
+      return initial;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
+    } catch (err) {
+      console.error("Failed to save schedule state:", err);
+    }
+  }, [state]);
+
+  // -------------------- Total calls calculation --------------------
+  const calculateTotalCalls = (): number => {
+    const { callStartTime, callEndTime, callDuration, callGap, batchNumber } =
+      state;
+
+    if (!callStartTime || !callEndTime || callEndTime <= callStartTime)
+      return 0;
+
+    const timeDifference = callEndTime - callStartTime; // in seconds
+    const totalCallTime = callDuration + callGap; // seconds per call
+    const totalCalls = (timeDifference / totalCallTime) * batchNumber;
+
+    return Math.floor(totalCalls); // return integer
+  };
 
   return (
-    <ScheduleContext.Provider value={{ state, dispatch }}>
+    <ScheduleContext.Provider value={{ state, dispatch, calculateTotalCalls }}>
       {children}
     </ScheduleContext.Provider>
   );

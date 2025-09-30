@@ -2,12 +2,11 @@
 
 import Button from "@/components/Button";
 import FileUpload, { useFormUpload } from "@/components/FileUpload";
-import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
 import { env } from "@/env";
 import Calendar from "@/features/schedule/components/CalendarSchedule";
+import callEndWatcher from "@/features/schedule/components/callEndTime";
 import { useSchedule } from "@/features/schedule/context/ScheduleContext";
-import { safeAsync } from "@/lib/safeAsync";
 import { LucideCloudUpload } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
@@ -19,6 +18,7 @@ interface ServiceIdResponse {
 }
 
 export default function NumberManagementPage() {
+  callEndWatcher();
   return (
     <div className="space-y-10">
       <HumanFilesManagement />
@@ -117,7 +117,7 @@ function AIFilesManagement() {
 
   const handleServiceId = async () => {
     const getServiceId = await fetch(
-      `${env.NEXT_PUBLIC_API_BASE_URL}/ai-agents`,
+      `${env.NEXT_PUBLIC_API_BASE_URL}/ai-agents?callType=outbound`,
       {
         method: "GET",
         headers: {

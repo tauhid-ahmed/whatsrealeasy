@@ -86,7 +86,11 @@ export default function CreateInboundAgent() {
           }
         );
 
+        console.log({ updateAgent });
+
         const updateAgentResponse = await updateAgent.json();
+
+        console.log({ updateAgentResponse });
 
         if (updateAgentResponse.status === "success") {
           toast.success("Agent updated successfully");

@@ -1,3 +1,4 @@
+import Button from "@/components/Button";
 import { env } from "@/env";
 import Pagination from "@/features/table/components/Pagination";
 import SearchField from "@/features/table/components/SearchField";
@@ -17,6 +18,7 @@ import {
   DEFAULT_PAGE,
 } from "@/features/table/utils/constant";
 import { getAccessToken } from "@/lib/getServerAuth";
+import Link from "next/link";
 
 // -------------------- API response types --------------------
 type Service = {
@@ -45,7 +47,7 @@ type CallLogApiRow = {
   createdAt: string;
   updatedAt: string;
   service: Service;
-  bookings: null;
+  bookings: null | { meetLink: string };
 };
 
 type ApiMeta = {
@@ -73,6 +75,7 @@ type CallLogRow = {
   call_status: CallStatus;
   call_time: string;
   company: string | null;
+  meetLink: string | null;
 };
 
 type TableHeader = {
@@ -120,6 +123,7 @@ function normalizeCallLogData(rows: CallLogApiRow[]): CallLogRow[] {
     call_status: row.call_status,
     call_time: new Date(row.call_time).toLocaleString(),
     company: row.company,
+    meetLink: row.bookings?.meetLink || null,
   }));
 }
 
@@ -148,8 +152,15 @@ export default async function InboundCallLogs({
   // Handle array response from fetchTableData
   const apiResponse = Array.isArray(response) ? response[0] : response;
 
-  const tableDataRaw: CallLogApiRow[] = apiResponse.data.data;
+  const tableData: CallLogApiRow[] = apiResponse.data.data;
   const meta: ApiMeta = apiResponse.data.meta;
+
+  const tableDataRaw: CallLogApiRow[] = tableData.map((item) => ({
+    ...item,
+    meetLink: item.bookings ? item.bookings.meetLink : null,
+  }));
+
+  console.log(tableDataRaw);
 
   // Normalize data
   const normalizedData: CallLogRow[] = normalizeCallLogData(tableDataRaw);
@@ -162,6 +173,7 @@ export default async function InboundCallLogs({
     { key: "call_status", label: "Status" },
     { key: "call_time", label: "Time" },
     { key: "company", label: "Company" },
+    { key: "meetLink", label: "Meet Link" },
   ] as const;
 
   // Apply sorting with type assertion
@@ -194,9 +206,26 @@ export default async function InboundCallLogs({
         <TableBody>
           {sorted.map((item: CallLogRow) => (
             <TableRow key={item.id}>
-              {tableHeader.map(({ key }) => (
-                <TableBodyItem key={key}>{item[key] ?? "N/A"}</TableBodyItem>
-              ))}
+              {tableHeader.map(({ key }) => {
+                const value = item[key] ?? "N/A";
+
+                // Check if value is a valid URL
+                let content: React.ReactNode = value;
+                try {
+                  if (typeof value === "string" && value.startsWith("http")) {
+                    new URL(value); // will throw if invalid
+                    content = (
+                      <Button size="sm" asChild>
+                        <Link href={value}>Meet Link</Link>
+                      </Button>
+                    );
+                  }
+                } catch {
+                  // Not a valid URL, keep as plain text
+                }
+
+                return <TableBodyItem key={key}>{content}</TableBodyItem>;
+              })}
             </TableRow>
           ))}
         </TableBody>

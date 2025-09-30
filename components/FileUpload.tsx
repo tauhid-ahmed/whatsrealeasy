@@ -529,13 +529,11 @@ export function useFormUpload({
     try {
       const response = await axios.post(url, data, config);
       onSuccess?.(response.data);
-      toast.success("Successful");
       return { success: true, data: response.data };
     } catch (error) {
       const err = error as Error;
       onError?.(err);
       logError(error);
-      toast.error(err.message);
       return { success: false, error: err.message };
     } finally {
       setUploading(false);

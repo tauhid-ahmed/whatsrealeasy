@@ -36,7 +36,11 @@ export default function CreateInboundAgent() {
     await safeAsync(
       async () => {
         const serviceCreate = await fetch(
-          `${env.NEXT_PUBLIC_API_BASE_URL_AI_INBOUND}/services/create-service/?serviceName=${formData.serviceName}&phoneNumber=${formData.phoneNumber}`,
+          `${
+            env.NEXT_PUBLIC_API_BASE_URL_AI_INBOUND
+          }/services/create-service/?serviceName=${encodeURIComponent(
+            formData.serviceName
+          )}&phoneNumber=${encodeURIComponent(formData.phoneNumber)}`,
           {
             method: "POST",
             headers: {
@@ -47,6 +51,8 @@ export default function CreateInboundAgent() {
 
         const serviceCreateResponse: { db_record: { _id: string } } =
           await serviceCreate.json();
+
+        console.log(serviceCreateResponse);
 
         await uploadForm({
           serviceId: serviceCreateResponse.db_record._id,
@@ -71,7 +77,7 @@ export default function CreateInboundAgent() {
         };
 
         const createAgent = await fetch(
-          `${env.NEXT_PUBLIC_API_BASE_URL_AI_INBOUND}/services/create-agent/?service_id=${agentData.params.service_id}&call_type=${agentData.params.call_type}`,
+          `${env.NEXT_PUBLIC_API_BASE_URL_AI_INBOUND}/services/create-agent/?service_id=${serviceCreateResponse.db_record._id}&call_type=${agentData.params.call_type}`,
           {
             method: "POST",
             headers: {

@@ -6,9 +6,13 @@ import Selector from "@/components/Selector";
 import { Slider } from "@/components/ui/slider";
 import { useSchedule } from "@/features/schedule/context/ScheduleContext";
 import { Input } from "@/components/ui/input";
+import Button from "@/components/Button";
+import { toast } from "sonner";
 
 export default function ScheduleForm() {
   const { state, dispatch } = useSchedule();
+  const { calculateTotalCalls } = useSchedule();
+  const totalCallsToday = calculateTotalCalls();
 
   // Dispatch helpers
   const handleDurationChange = (val: number[]) => {
@@ -110,6 +114,15 @@ export default function ScheduleForm() {
           type="number"
         />
       </div>
+      <Button
+        onClick={() => {
+          toast.success(`All calls have been calculated ${totalCallsToday}`);
+          console.log(totalCallsToday);
+        }}
+        size="sm"
+      >
+        Calculate Calls
+      </Button>
     </div>
   );
 }
