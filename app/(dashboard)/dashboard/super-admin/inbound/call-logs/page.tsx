@@ -152,15 +152,15 @@ export default async function InboundCallLogs({
   // Handle array response from fetchTableData
   const apiResponse = Array.isArray(response) ? response[0] : response;
 
-  const tableData: CallLogApiRow[] = apiResponse.data.data;
-  const meta: ApiMeta = apiResponse.data.meta;
+  const tableData: CallLogApiRow[] = apiResponse?.data?.data;
+  const meta: ApiMeta = apiResponse?.data?.meta;
 
-  const tableDataRaw: CallLogApiRow[] = tableData.map((item) => ({
-    ...item,
-    meetLink: item.bookings ? item.bookings.meetLink : null,
-  }));
-
-  console.log(tableDataRaw);
+  const tableDataRaw: CallLogApiRow[] =
+    tableData &&
+    tableData.map((item) => ({
+      ...item,
+      meetLink: item.bookings ? item.bookings.meetLink : null,
+    }));
 
   // Normalize data
   const normalizedData: CallLogRow[] = normalizeCallLogData(tableDataRaw);
@@ -204,30 +204,41 @@ export default async function InboundCallLogs({
         </TableHeader>
 
         <TableBody>
-          {sorted.map((item: CallLogRow) => (
-            <TableRow key={item.id}>
-              {tableHeader.map(({ key }) => {
-                const value = item[key] ?? "N/A";
+          <TableRow>
+            {apiResponse.data.data.length > 0 ? (
+              sorted.map((item: CallLogRow) => (
+                <TableRow key={item.id}>
+                  {tableHeader.map(({ key }) => {
+                    const value = item[key] ?? "N/A";
 
-                // Check if value is a valid URL
-                let content: React.ReactNode = value;
-                try {
-                  if (typeof value === "string" && value.startsWith("http")) {
-                    new URL(value); // will throw if invalid
-                    content = (
-                      <Button size="sm" asChild>
-                        <Link href={value}>Meet Link</Link>
-                      </Button>
-                    );
-                  }
-                } catch {
-                  // Not a valid URL, keep as plain text
-                }
+                    // Check if value is a valid URL
+                    let content: React.ReactNode = value;
+                    try {
+                      if (
+                        typeof value === "string" &&
+                        value.startsWith("http")
+                      ) {
+                        new URL(value); // will throw if invalid
+                        content = (
+                          <Button size="sm" asChild>
+                            <Link href={value}>Meet Link</Link>
+                          </Button>
+                        );
+                      }
+                    } catch {
+                      // Not a valid URL, keep as plain text
+                    }
 
-                return <TableBodyItem key={key}>{content}</TableBodyItem>;
-              })}
-            </TableRow>
-          ))}
+                    return <TableBodyItem key={key}>{content}</TableBodyItem>;
+                  })}
+                </TableRow>
+              ))
+            ) : (
+              <TableBodyItem colSpan={tableHeader.length}>
+                <div className="text-center">No Data Found</div>
+              </TableBodyItem>
+            )}
+          </TableRow>
         </TableBody>
       </Table>
 

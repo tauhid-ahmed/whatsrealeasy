@@ -111,8 +111,15 @@ export function TableRow({ children, className }: React.ComponentProps<"tr">) {
   );
 }
 
-export function TableBodyItem({ children }: React.ComponentProps<"td">) {
-  return <td className="px-2 py-1.5">{children}</td>;
+export function TableBodyItem({
+  children,
+  ...props
+}: React.ComponentProps<"td">) {
+  return (
+    <td className="px-2 py-1.5" {...props}>
+      {children}
+    </td>
+  );
 }
 
 function formatHeaderLabel(key: string): string {
