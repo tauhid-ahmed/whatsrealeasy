@@ -8,12 +8,14 @@ import { useState } from "react";
 import Button from "@/components/Button";
 import { safeAsync } from "@/lib/safeAsync";
 import { env } from "@/env";
+import { useSearchParams } from "next/navigation";
 
 export default function CreateInboundAgent() {
+  const searchParams = useSearchParams();
+
   const [formData, setFormData] = useState({
     serviceName: "",
     phoneNumber: "",
-    greetingMessage: "",
     files: [] as File[],
   });
 
@@ -56,7 +58,6 @@ export default function CreateInboundAgent() {
           call_type: "inbound",
         },
         body: {
-          first_message: formData.greetingMessage,
           max_duration_seconds: 300,
           stability: 0.9,
           speed: 0.9,

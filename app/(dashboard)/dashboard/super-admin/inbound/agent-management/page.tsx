@@ -43,6 +43,7 @@ type AgentApiRow = {
   createdAt: string;
   updatedAt: string;
   service: ServiceDetails;
+  first_message: string;
 };
 
 type ApiMeta = {
@@ -70,6 +71,7 @@ type AgentTableRow = {
   phoneNumber: string;
   voiceName: string;
   createdAt: string;
+  first_message: string;
 };
 
 type TableHeader = {
@@ -118,6 +120,7 @@ function normalizeAgentData(rows: AgentApiRow[]): AgentTableRow[] {
     phoneNumber: row.service.phoneNumber,
     voiceName: row.service.voiceName,
     createdAt: new Date(row.createdAt).toLocaleString(),
+    first_message: row.first_message,
   }));
 }
 
@@ -206,22 +209,25 @@ export default async function InboundCallLogs({
         </TableHeader>
 
         <TableBody>
-          {sorted.map((item: AgentTableRow) => (
-            <TableRow key={item.id}>
-              {tableHeader.map(({ key }) => (
-                <TableBodyItem key={key}>{item[key] ?? "N/A"}</TableBodyItem>
-              ))}
-              <td>
-                <Button size="sm" asChild variant="ghost">
-                  <Link
-                    href={`/dashboard/super-admin/inbound/agent-management/${item.id}`}
-                  >
-                    <SquarePen />
-                  </Link>
-                </Button>
-              </td>
-            </TableRow>
-          ))}
+          {sorted.map((item: AgentTableRow) => {
+            console.log(item);
+            return (
+              <TableRow key={item.id}>
+                {tableHeader.map(({ key }) => (
+                  <TableBodyItem key={key}>{item[key] ?? "N/A"}</TableBodyItem>
+                ))}
+                <td>
+                  <Button size="sm" asChild variant="ghost">
+                    <Link
+                      href={`/dashboard/super-admin/inbound/agent-management/${item.id}?service=${item.serviceName}&phone=${item.phoneNumber}&message=${item?.first_message}`}
+                    >
+                      <SquarePen />
+                    </Link>
+                  </Button>
+                </td>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
 
