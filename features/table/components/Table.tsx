@@ -56,7 +56,7 @@ export function TableHeaderItem({
     else params.delete("sort");
 
     startTransition(() => {
-      router.push(`?${params.toString()}`);
+      router.push(`?${params.toString()}`, { scroll: false });
     });
   };
 

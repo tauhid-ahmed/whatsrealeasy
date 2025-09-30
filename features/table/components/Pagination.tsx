@@ -28,7 +28,7 @@ export default function Pagination({
     params.set("limit", pageSize.toString());
     const url = `?${params.toString()}`;
     startTransition(() => {
-      router.push(url);
+      router.push(url, { scroll: false });
     });
   };
 

@@ -1,6 +1,7 @@
 import { getIcon, dashboardStats } from "@/data/analyticsData";
 import { env } from "@/env";
 import AnalyticsChart from "@/features/analytics/Charts";
+import TopServicesTableInbound from "@/features/analytics/TopServicesInbound";
 import BookingTrendChart from "@/features/chart/components/CallChart";
 import Stats from "@/features/chart/components/Stats";
 import { getAccessToken } from "@/lib/getServerAuth";
@@ -72,7 +73,17 @@ export interface SafeAsyncResponse {
   error: unknown | null;
 }
 
-export default async function AdminAnalyticsPage() {
+export default async function AdminAnalyticsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    page: string;
+    limit: string;
+    sort: string;
+    q: string;
+  }>;
+}) {
+  const queryParams = await searchParams;
   const token = await getAccessToken();
   const result = await safeAsync(async (): Promise<AnalyticsApiResponse> => {
     const response = await fetch(
@@ -94,6 +105,7 @@ export default async function AdminAnalyticsPage() {
       <div className="mt-14">
         <BookingTrendChart data={data.monthlyTrends} />
       </div>
+      <TopServicesTableInbound searchParams={queryParams} />
     </>
   );
 }

@@ -1,11 +1,9 @@
-import { getIcon, dashboardStats } from "@/data/analyticsData";
 import { env } from "@/env";
-import AnalyticsChart from "@/features/analytics/Charts";
+import TopServicesTableOutbound from "@/features/analytics/TopServicesOutbound";
 import BookingTrendChart from "@/features/chart/components/CallChart";
 import Stats from "@/features/chart/components/Stats";
 import { getAccessToken } from "@/lib/getServerAuth";
 import { safeAsync } from "@/lib/safeAsync";
-import { cn } from "@/lib/utils";
 
 // Main analytics data object
 export interface AnalyticsData {
@@ -15,16 +13,16 @@ export interface AnalyticsData {
       success: number;
       drop: number;
       waiting: number;
-      successRate: number; // percentage
-      callType: "incoming" | "outgoing"; // restrict to known values
+      successRate: number;
+      callType: "incoming" | "outgoing";
     };
     appointments: {
       total: number;
       confirmed: number;
       upcoming: number;
-      confirmationRate: number; // percentage
+      confirmationRate: number;
     };
-    averageAppointmentTime: number; // in ms
+    averageAppointmentTime: number;
   };
   monthlyTrends: MonthlyTrend[];
   chartConfig: {
@@ -72,7 +70,17 @@ export interface SafeAsyncResponse {
   error: unknown | null;
 }
 
-export default async function AdminAnalyticsPage() {
+export default async function AdminAnalyticsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    page: string;
+    limit: string;
+    sort: string;
+    q: string;
+  }>;
+}) {
+  const queryParams = await searchParams;
   const token = await getAccessToken();
   const result = await safeAsync(async (): Promise<AnalyticsApiResponse> => {
     const response = await fetch(
@@ -94,6 +102,7 @@ export default async function AdminAnalyticsPage() {
       <div className="mt-14">
         <BookingTrendChart data={data.monthlyTrends} />
       </div>
+      <TopServicesTableOutbound searchParams={queryParams} />
     </>
   );
 }

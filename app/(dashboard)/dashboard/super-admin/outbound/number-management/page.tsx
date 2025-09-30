@@ -3,6 +3,7 @@
 import Button from "@/components/Button";
 import FileUpload, { useFormUpload } from "@/components/FileUpload";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/context/AuthContext";
 import { env } from "@/env";
 import Calendar from "@/features/schedule/components/CalendarSchedule";
 import { useSchedule } from "@/features/schedule/context/ScheduleContext";
@@ -27,7 +28,8 @@ export default function NumberManagementPage() {
 }
 
 function HumanFilesManagement() {
-  const { state, dispatch } = useSchedule();
+  const { state } = useSchedule();
+  const auth = useAuth();
 
   const [formData, setFormData] = useState({
     files: [] as File[],
@@ -41,7 +43,14 @@ function HumanFilesManagement() {
     e.preventDefault();
 
     const getServiceId = await fetch(
-      `${env.NEXT_PUBLIC_API_BASE_URL}/ai-agents?callType=outbound`
+      `${env.NEXT_PUBLIC_API_BASE_URL}/ai-agents?callType=outbound`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth?.accessToken || "",
+        },
+      }
     );
 
     const getServiceIdResponse: ServiceIdResponse = await getServiceId.json();
@@ -76,7 +85,7 @@ function HumanFilesManagement() {
             disabled={uploading}
             onUploadSuccess={() => toast.success("File uploaded successfully!")}
             onUploadError={(error) => toast.error(error.message)}
-            accept="text/csv"
+            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
           />
 
           <div className="flex justify-center">
@@ -91,6 +100,7 @@ function HumanFilesManagement() {
 }
 
 function AIFilesManagement() {
+  const auth = useAuth();
   const { uploadForm, uploading, progress } = useFormUpload({
     url: `${env.NEXT_PUBLIC_API_BASE_URL_AI_INBOUND}/service-knowledge/knowledge-base/file`,
   });
@@ -101,7 +111,14 @@ function AIFilesManagement() {
 
   const handleServiceId = async () => {
     const getServiceId = await fetch(
-      `${env.NEXT_PUBLIC_API_BASE_URL}/ai-agents`
+      `${env.NEXT_PUBLIC_API_BASE_URL}/ai-agents`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth?.accessToken || "",
+        },
+      }
     );
     const getServiceIdResponse: ServiceIdResponse = await getServiceId.json();
     const serviceId = getServiceIdResponse.data?.data?.[0]?.serviceId ?? null;
@@ -136,7 +153,6 @@ function AIFilesManagement() {
         }),
       }
     );
-    console.log("ssss");
 
     const updateAgentResponse = await updateAgent.json();
     console.log({ updateAgentResponse });

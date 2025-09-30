@@ -19,7 +19,7 @@ export default function PageLimits() {
     params.set("limit", limit);
     params.delete("page");
     const url = `?${params.toString()}`;
-    router.push(url);
+    router.push(url, { scroll: false });
   };
 
   return (
